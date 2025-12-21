@@ -11,7 +11,7 @@ import {
   DialogContent,
   IconButton,
 } from "@mui/material";
-import { Email, Lock, Code, Close, Info } from "@mui/icons-material";
+import { Email, Lock, Code, Close, Info, LocalCafe } from "@mui/icons-material";
 
 export function Footer() {
   const [open, setOpen] = useState(false);
@@ -46,14 +46,29 @@ export function Footer() {
               {new Date().getFullYear()}
             </Typography>
 
-            <Button
-              startIcon={<Info />}
-              size="small"
-              color="inherit"
-              onClick={() => setOpen(true)}
-            >
-              About & Privacy
-            </Button>
+            <Stack direction="row" spacing={2}>
+              <Button
+                startIcon={<LocalCafe />}
+                size="small"
+                color="inherit"
+                href="https://buymeacoffee.com/justdorecap"
+                target="_blank"
+                sx={{
+                  color: "#FFDD00",
+                  "&:hover": { bgcolor: "rgba(255, 221, 0, 0.08)" },
+                }}
+              >
+                Buy us a coffee
+              </Button>
+              <Button
+                startIcon={<Info />}
+                size="small"
+                color="inherit"
+                onClick={() => setOpen(true)}
+              >
+                About & Privacy
+              </Button>
+            </Stack>
           </Stack>
         </Container>
       </Box>
@@ -152,6 +167,27 @@ export function Footer() {
                       </Link>
                     </Box>
                   </Stack>
+                </Box>
+
+                <Box pt={1}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<LocalCafe />}
+                    href="https://buymeacoffee.com/justdorecap"
+                    target="_blank"
+                    color="inherit"
+                    sx={{
+                      borderColor: "#FFDD00",
+                      color: (theme) =>
+                        theme.palette.mode === "dark" ? "#FFDD00" : "#B89E00",
+                      "&:hover": {
+                        borderColor: "#FFDD00",
+                        bgcolor: "rgba(255, 221, 0, 0.08)",
+                      },
+                    }}
+                  >
+                    Support us with a coffee
+                  </Button>
                 </Box>
               </Stack>
             </Box>
