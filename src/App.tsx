@@ -31,6 +31,7 @@ import { ActivityList } from "./components/ActivityList";
 import { MapView } from "./components/MapView";
 import { HeatmapView } from "./components/HeatmapView";
 import { DateFilter } from "./components/DateFilter";
+import { Footer } from "./components/Footer";
 import type { DateRange } from "./components/DateFilter";
 
 function App() {
@@ -117,57 +118,79 @@ function App() {
   const isLoggedIn = Boolean(accessToken);
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{ py: { xs: 3, md: 6 }, px: { xs: 2, sm: 3 } }}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
     >
-      <Stack spacing={{ xs: 3, md: 4 }}>
-        <HeaderBar onReset={handleReset} isLoggedIn={isLoggedIn} />
+      <Container
+        maxWidth="lg"
+        sx={{ py: { xs: 3, md: 6 }, px: { xs: 2, sm: 3 }, flexGrow: 1 }}
+      >
+        <Stack spacing={{ xs: 3, md: 4 }}>
+          <HeaderBar onReset={handleReset} isLoggedIn={isLoggedIn} />
 
-        {!isLoggedIn && (
-          <Hero onLoginClick={() => (window.location.href = authUrl)} />
-        )}
+          {!isLoggedIn && (
+            <Hero onLoginClick={() => (window.location.href = authUrl)} />
+          )}
 
-        {showLoader && <LoadingState status={status} />}
+          {showLoader && <LoadingState status={status} />}
 
-        {status === "error" && errorMessage && (
-          <Alert
-            severity="error"
-            variant="outlined"
-            icon={<ErrorIcon fontSize="inherit" />}
-          >
-            {errorMessage}
-          </Alert>
-        )}
+          {status === "error" && errorMessage && (
+            <Alert
+              severity="error"
+              variant="outlined"
+              icon={<ErrorIcon fontSize="inherit" />}
+            >
+              {errorMessage}
+            </Alert>
+          )}
 
-        {status === "ready" && activities.length > 0 && (
-          <Stack spacing={{ xs: 2, md: 3 }}>
-            <Stack spacing={2}>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <ToggleButtonGroup
-                  value={viewMode}
-                  exclusive
-                  onChange={(_, newView) => newView && setViewMode(newView)}
-                  aria-label="view mode"
-                  size="small"
-                  fullWidth={false}
+          {status === "ready" && activities.length > 0 && (
+            <Stack spacing={{ xs: 2, md: 3 }}>
+              <Stack spacing={2}>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
                 >
-                  <ToggleButton value="list" aria-label="list view">
-                    <ListIcon sx={{ mr: 1 }} /> List
-                  </ToggleButton>
-                  <ToggleButton value="map" aria-label="map view">
-                    <MapIcon sx={{ mr: 1 }} /> Map
-                  </ToggleButton>
-                  <ToggleButton value="heatmap" aria-label="heatmap view">
-                    <HeatmapIcon sx={{ mr: 1 }} /> Overview
-                  </ToggleButton>
-                </ToggleButtonGroup>
+                  <ToggleButtonGroup
+                    value={viewMode}
+                    exclusive
+                    onChange={(_, newView) => newView && setViewMode(newView)}
+                    aria-label="view mode"
+                    size="small"
+                    fullWidth={false}
+                  >
+                    <ToggleButton value="list" aria-label="list view">
+                      <ListIcon sx={{ mr: 1 }} /> List
+                    </ToggleButton>
+                    <ToggleButton value="map" aria-label="map view">
+                      <MapIcon sx={{ mr: 1 }} /> Map
+                    </ToggleButton>
+                    <ToggleButton value="heatmap" aria-label="heatmap view">
+                      <HeatmapIcon sx={{ mr: 1 }} /> Overview
+                    </ToggleButton>
+                  </ToggleButtonGroup>
 
-                <Box sx={{ display: { xs: "none", md: "block" } }}>
+                  <Box sx={{ display: { xs: "none", md: "block" } }}>
+                    <DateFilter
+                      selectedRange={dateRange}
+                      onSelectRange={setDateRange}
+                    />
+                  </Box>
+                </Stack>
+
+                <Box
+                  sx={{
+                    display: { xs: "block", md: "none" },
+                    width: "100%",
+                    overflowX: "auto",
+                    pb: 1,
+                  }}
+                >
                   <DateFilter
                     selectedRange={dateRange}
                     onSelectRange={setDateRange}
@@ -175,108 +198,99 @@ function App() {
                 </Box>
               </Stack>
 
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                flexWrap="wrap"
+                useFlexGap
+              >
+                <FilterIcon color="action" />
+                {activityTypes.map((type) => (
+                  <Chip
+                    key={type}
+                    label={type}
+                    onClick={() => setFilterType(type)}
+                    color={filterType === type ? "primary" : "default"}
+                    variant={filterType === type ? "filled" : "outlined"}
+                    clickable
+                  />
+                ))}
+              </Stack>
+
               <Box
+                key={viewMode}
                 sx={{
-                  display: { xs: "block", md: "none" },
-                  width: "100%",
-                  overflowX: "auto",
-                  pb: 1,
+                  animation: "fadeIn 0.3s ease-in-out",
+                  "@keyframes fadeIn": {
+                    "0%": { opacity: 0, transform: "translateY(10px)" },
+                    "100%": { opacity: 1, transform: "translateY(0)" },
+                  },
                 }}
               >
-                <DateFilter
-                  selectedRange={dateRange}
-                  onSelectRange={setDateRange}
-                />
+                {viewMode === "list" ? (
+                  <>
+                    {visitedCountries.size > 0 && (
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="caption" color="text.secondary">
+                          Visited Countries:
+                        </Typography>
+                        <CountryFlags
+                          countries={visitedCountries}
+                          selectedCountry={selectedCountry}
+                          onSelectCountry={setSelectedCountry}
+                        />
+                      </Box>
+                    )}
+                    <ActivityList activities={filteredActivities} />
+                  </>
+                ) : viewMode === "map" ? (
+                  <MapView
+                    activities={filteredActivities}
+                    visitedCountries={visitedCountries}
+                    geoJsonData={geoJsonData}
+                  />
+                ) : (
+                  <HeatmapView
+                    activities={filteredActivities}
+                    dateRange={dateRange}
+                    year={
+                      dateRange === "lastYear"
+                        ? new Date().getFullYear() - 1
+                        : new Date().getFullYear()
+                    }
+                  />
+                )}
               </Box>
             </Stack>
+          )}
 
-            <Stack
-              direction="row"
-              spacing={1}
-              alignItems="center"
-              flexWrap="wrap"
-              useFlexGap
+          {status === "ready" && activities.length === 0 && (
+            <Card
+              variant="outlined"
+              sx={{ borderStyle: "dashed", bgcolor: "transparent" }}
             >
-              <FilterIcon color="action" />
-              {activityTypes.map((type) => (
-                <Chip
-                  key={type}
-                  label={type}
-                  onClick={() => setFilterType(type)}
-                  color={filterType === type ? "primary" : "default"}
-                  variant={filterType === type ? "filled" : "outlined"}
-                  clickable
-                />
-              ))}
-            </Stack>
-
-            <Box
-              key={viewMode}
-              sx={{
-                animation: "fadeIn 0.3s ease-in-out",
-                "@keyframes fadeIn": {
-                  "0%": { opacity: 0, transform: "translateY(10px)" },
-                  "100%": { opacity: 1, transform: "translateY(0)" },
-                },
-              }}
-            >
-              {viewMode === "list" ? (
-                <>
-                  {visitedCountries.size > 0 && (
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="caption" color="text.secondary">
-                        Visited Countries:
-                      </Typography>
-                      <CountryFlags
-                        countries={visitedCountries}
-                        selectedCountry={selectedCountry}
-                        onSelectCountry={setSelectedCountry}
-                      />
-                    </Box>
-                  )}
-                  <ActivityList activities={filteredActivities} />
-                </>
-              ) : viewMode === "map" ? (
-                <MapView
-                  activities={filteredActivities}
-                  visitedCountries={visitedCountries}
-                  geoJsonData={geoJsonData}
-                />
-              ) : (
-                <HeatmapView 
-                  activities={filteredActivities} 
-                  dateRange={dateRange}
-                  year={dateRange === "lastYear" ? new Date().getFullYear() - 1 : new Date().getFullYear()}
-                />
-              )}
-            </Box>
-          </Stack>
-        )}
-
-        {status === "ready" && activities.length === 0 && (
-          <Card
-            variant="outlined"
-            sx={{ borderStyle: "dashed", bgcolor: "transparent" }}
-          >
-            <CardContent sx={{ py: 6, textAlign: "center" }}>
-              <Stack spacing={2} alignItems="center">
-                <Box
-                  sx={{ p: 2, borderRadius: "50%", bgcolor: "action.hover" }}
-                >
-                  <TimelineIcon color="primary" sx={{ fontSize: 40 }} />
-                </Box>
-                <Typography variant="h5" fontWeight="bold">
-                  No activities yet
-                </Typography>
-                <Typography color="text.secondary">
-                  Go for a walk or run a test workout.
-                </Typography>
-              </Stack>
-            </CardContent>
-          </Card>
-        )}
-      </Stack>
-    </Container>
+              <CardContent sx={{ py: 6, textAlign: "center" }}>
+                <Stack spacing={2} alignItems="center">
+                  <Box
+                    sx={{ p: 2, borderRadius: "50%", bgcolor: "action.hover" }}
+                  >
+                    <TimelineIcon color="primary" sx={{ fontSize: 40 }} />
+                  </Box>
+                  <Typography variant="h5" fontWeight="bold">
+                    No activities yet
+                  </Typography>
+                  <Typography color="text.secondary">
+                    Go for a walk or run a test workout.
+                  </Typography>
+                </Stack>
+              </CardContent>
+            </Card>
+          )}
+        </Stack>
+      </Container>
+      <Footer />
+    </Box>
   );
 }
 
