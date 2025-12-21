@@ -40,7 +40,7 @@ interface HeatmapViewProps {
 export function HeatmapView({
   activities,
   year = new Date().getFullYear(),
-  dateRange = "all",
+  dateRange = "year",
 }: HeatmapViewProps) {
   const theme = useTheme();
   const exportRef = useRef<HTMLDivElement>(null);
@@ -316,7 +316,7 @@ export function HeatmapView({
                   const isFirstWeekOfMonth = firstDay.getDate() <= 7;
                   const showLabel =
                     isFirstWeekOfMonth ||
-                    (i === 0 && dateRange !== "year" && dateRange !== "all");
+                    (i === 0 && dateRange !== "year" && dateRange !== "lastYear");
                   const monthLabel = showLabel
                     ? format(firstDay, "MMM", { locale: enUS })
                     : null;
@@ -404,7 +404,7 @@ export function HeatmapView({
                       const isFuture = day > new Date();
                       const isCurrentYear = day.getFullYear() === year;
                       const shouldShow =
-                        dateRange === "year" || dateRange === "all"
+                        dateRange === "year" || dateRange === "lastYear"
                           ? isCurrentYear
                           : true;
 
@@ -584,7 +584,7 @@ export function HeatmapView({
             const isFirstWeekOfMonth = firstDayOfWeek.getDate() <= 7;
             const showMonthLabel =
               isFirstWeekOfMonth ||
-              (i === 0 && dateRange !== "year" && dateRange !== "all");
+              (i === 0 && dateRange !== "year" && dateRange !== "lastYear");
 
             const monthLabel = showMonthLabel
               ? format(firstDayOfWeek, "MMM", { locale: enUS })
@@ -628,7 +628,7 @@ export function HeatmapView({
                   const isFuture = day > new Date();
                   const isCurrentYear = day.getFullYear() === year;
                   const shouldShow =
-                    dateRange === "year" || dateRange === "all"
+                    dateRange === "year" || dateRange === "lastYear"
                       ? isCurrentYear
                       : true;
 

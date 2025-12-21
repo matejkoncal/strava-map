@@ -48,7 +48,7 @@ function App() {
 
   const [viewMode, setViewMode] = useState<"list" | "map" | "heatmap">("list");
   const [filterType, setFilterType] = useState<string>("All");
-  const [dateRange, setDateRange] = useState<DateRange>("all");
+  const [dateRange, setDateRange] = useState<DateRange>("year");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
   const filteredActivities = useMemo(() => {
@@ -67,39 +67,41 @@ function App() {
     }
 
     // Filter by Date Range
-    if (dateRange !== "all") {
-      const now = new Date();
-      const currentYear = now.getFullYear();
-      const currentMonth = now.getMonth();
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
 
-      // Get start of week (Monday)
-      const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ...
-      const diff = now.getDate() - currentDay + (currentDay === 0 ? -6 : 1); // adjust when day is sunday
-      const startOfWeek = new Date(now.setDate(diff));
-      startOfWeek.setHours(0, 0, 0, 0);
+    // Get start of week (Monday)
+    const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ...
+    const diff = now.getDate() - currentDay + (currentDay === 0 ? -6 : 1); // adjust when day is sunday
+    const startOfWeek = new Date(now.setDate(diff));
+    startOfWeek.setHours(0, 0, 0, 0);
 
-      filtered = filtered.filter((a) => {
-        if (!a.start_date) return false;
-        const activityDate = new Date(a.start_date);
+    filtered = filtered.filter((a) => {
+      if (!a.start_date) return false;
+      const activityDate = new Date(a.start_date);
 
-        if (dateRange === "year") {
-          return activityDate.getFullYear() === currentYear;
-        }
+      if (dateRange === "year") {
+        return activityDate.getFullYear() === currentYear;
+      }
 
-        if (dateRange === "month") {
-          return (
-            activityDate.getFullYear() === currentYear &&
-            activityDate.getMonth() === currentMonth
-          );
-        }
+      if (dateRange === "lastYear") {
+        return activityDate.getFullYear() === currentYear - 1;
+      }
 
-        if (dateRange === "week") {
-          return activityDate >= startOfWeek;
-        }
+      if (dateRange === "month") {
+        return (
+          activityDate.getFullYear() === currentYear &&
+          activityDate.getMonth() === currentMonth
+        );
+      }
 
-        return true;
-      });
-    }
+      if (dateRange === "week") {
+        return activityDate >= startOfWeek;
+      }
+
+      return true;
+    });
 
     return filtered;
   }, [activities, filterType, selectedCountry, activityCountries, dateRange]);
@@ -241,7 +243,11 @@ function App() {
                   geoJsonData={geoJsonData}
                 />
               ) : (
-                <HeatmapView activities={filteredActivities} />
+                <HeatmapView 
+                  activities={filteredActivities} 
+                  dateRange={dateRange}
+                  year={dateRange === "lastYear" ? new Date().getFullYear() - 1 : new Date().getFullYear()}
+                />
               )}
             </Box>
           </Stack>

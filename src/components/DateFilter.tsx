@@ -1,7 +1,7 @@
 import { Chip, Stack } from "@mui/material";
 import { CalendarMonth as CalendarIcon } from "@mui/icons-material";
 
-export type DateRange = "all" | "week" | "month" | "year";
+export type DateRange = "week" | "month" | "year" | "lastYear";
 
 interface DateFilterProps {
   selectedRange: DateRange;
@@ -10,10 +10,10 @@ interface DateFilterProps {
 
 export function DateFilter({ selectedRange, onSelectRange }: DateFilterProps) {
   const ranges: { value: DateRange; label: string }[] = [
-    { value: "all", label: "All" },
     { value: "week", label: "This Week" },
     { value: "month", label: "This Month" },
     { value: "year", label: "This Year" },
+    { value: "lastYear", label: "Last Year" },
   ];
 
   return (
