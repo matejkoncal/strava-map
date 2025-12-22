@@ -46,6 +46,7 @@ export function CountryFlags({
               onClick={() => onSelectCountry(isSelected ? null : code)}
               size="small"
               sx={{
+                px: 1,
                 bgcolor: isSelected ? undefined : "rgba(255,255,255,0.05)",
                 borderColor: "rgba(255,255,255,0.1)",
                 fontFamily: "monospace",
