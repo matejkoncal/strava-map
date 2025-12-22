@@ -48,7 +48,9 @@ function App() {
 
   const { activityCountries, geoJsonData } = useVisitedCountries(activities);
 
-  const [viewMode, setViewMode] = useState<"list" | "map" | "heatmap">("heatmap");
+  const [viewMode, setViewMode] = useState<"list" | "map" | "heatmap">(
+    "heatmap"
+  );
   const [filterType, setFilterType] = useState<string>("All");
   const [dateRange, setDateRange] = useState<DateRange>("year");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);

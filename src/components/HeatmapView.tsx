@@ -121,6 +121,7 @@ export function HeatmapView({
       const canvas = await html2canvas(targetRef, {
         backgroundColor: theme.palette.background.default,
         scale: 2, // Higher quality
+        useCORS: true,
       });
 
       const link = document.createElement("a");
@@ -140,6 +141,7 @@ export function HeatmapView({
       const canvas = await html2canvas(targetRef, {
         backgroundColor: theme.palette.background.default,
         scale: 2,
+        useCORS: true,
       });
 
       canvas.toBlob(async (blob) => {
@@ -330,7 +332,9 @@ export function HeatmapView({
                   const isFirstWeekOfMonth = firstDay.getDate() <= 7;
                   const showLabel =
                     isFirstWeekOfMonth ||
-                    (i === 0 && dateRange !== "year" && dateRange !== "lastYear");
+                    (i === 0 &&
+                      dateRange !== "year" &&
+                      dateRange !== "lastYear");
                   const monthLabel = showLabel
                     ? format(firstDay, "MMM", { locale: enUS })
                     : null;
