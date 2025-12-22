@@ -30,17 +30,20 @@ import type { Activity } from "../types";
 import { formatDistance, formatDuration } from "../utils/format";
 import type { DateRange } from "./DateFilter";
 import { ActivityDetailDialog } from "./ActivityDetailDialog";
+import { CountryFlags } from "./CountryFlags";
 
 interface HeatmapViewProps {
   activities: Activity[];
   year?: number;
   dateRange?: DateRange;
+  visitedCountries?: Set<string>;
 }
 
 export function HeatmapView({
   activities,
   year = new Date().getFullYear(),
   dateRange = "year",
+  visitedCountries = new Set(),
 }: HeatmapViewProps) {
   const theme = useTheme();
   const exportRef = useRef<HTMLDivElement>(null);
@@ -298,6 +301,17 @@ export function HeatmapView({
             </Stack>
           </Stack>
 
+          {/* Country Flags */}
+          {visitedCountries.size > 0 && (
+            <Box>
+              <CountryFlags
+                countries={visitedCountries}
+                selectedCountry={null}
+                onSelectCountry={() => {}}
+              />
+            </Box>
+          )}
+
           {/* Heatmap Grid */}
           <Box sx={{ overflowX: "auto" }}>
             <Box
@@ -310,7 +324,7 @@ export function HeatmapView({
               }}
             >
               {/* Month Labels */}
-              <Box sx={{ display: "flex", ml: "22px" }}>
+              <Box sx={{ display: "flex", ml: 0 }}>
                 {weeks.map((week, i) => {
                   const firstDay = week[0];
                   const isFirstWeekOfMonth = firstDay.getDate() <= 7;
@@ -348,45 +362,6 @@ export function HeatmapView({
               </Box>
 
               <Box sx={{ display: "flex", gap: "2px" }}>
-                {/* Day Labels */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "2px",
-                    width: "20px",
-                    pt: 0,
-                  }}
-                >
-                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
-                    (d, i) => (
-                      <Box
-                        key={d}
-                        sx={{
-                          height: 12,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "flex-end",
-                          pr: 0.5,
-                        }}
-                      >
-                        {i % 2 === 0 && (
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              fontSize: "0.6rem",
-                              color: "text.secondary",
-                              lineHeight: 1,
-                            }}
-                          >
-                            {d}
-                          </Typography>
-                        )}
-                      </Box>
-                    )
-                  )}
-                </Box>
-
                 {/* Weeks Columns */}
                 {weeks.map((week, i) => (
                   <Box
@@ -545,6 +520,17 @@ export function HeatmapView({
           </Box>
         </Stack>
 
+        {/* Country Flags */}
+        {visitedCountries.size > 0 && (
+          <Box sx={{ transform: "scale(1.5)", transformOrigin: "center" }}>
+            <CountryFlags
+              countries={visitedCountries}
+              selectedCountry={null}
+              onSelectCountry={() => {}}
+            />
+          </Box>
+        )}
+
         {/* Vertical Heatmap for Story */}
         <Box
           sx={{
@@ -555,29 +541,6 @@ export function HeatmapView({
             alignItems: "center",
           }}
         >
-          {/* Days Header */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "40px repeat(7, 24px)",
-              gap: "4px",
-              mb: 1,
-            }}
-          >
-            <Box />
-            {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
-              <Typography
-                key={d}
-                variant="h6"
-                align="center"
-                color="text.secondary"
-                sx={{ fontSize: "1.2rem" }}
-              >
-                {d}
-              </Typography>
-            ))}
-          </Box>
-
           {/* Weeks Rows */}
           {weeks.map((week, i) => {
             const firstDayOfWeek = week[0];

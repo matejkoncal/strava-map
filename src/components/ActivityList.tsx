@@ -37,6 +37,23 @@ function Metric({ label, value }: { label: string; value: string }) {
   );
 }
 
+const getActivityColor = (type?: string) => {
+  switch (type) {
+    case "Run":
+      return "#ef6c00"; // Orange
+    case "Ride":
+      return "#d32f2f"; // Red
+    case "Swim":
+      return "#0288d1"; // Blue
+    case "Walk":
+      return "#4caf50"; // Green
+    case "Hike":
+      return "#795548"; // Brown
+    default:
+      return "#757575"; // Grey
+  }
+};
+
 export function ActivityList({ activities }: { activities: Activity[] }) {
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
     null
@@ -68,6 +85,7 @@ export function ActivityList({ activities }: { activities: Activity[] }) {
               sx={{
                 cursor: "pointer",
                 transition: "transform 0.2s, box-shadow 0.2s",
+                borderRight: `6px solid ${getActivityColor(activity.type)}`,
                 "&:hover": {
                   transform: "translateY(-4px)",
                   boxShadow: "0 12px 40px rgba(0,0,0,0.2)",
@@ -105,16 +123,16 @@ export function ActivityList({ activities }: { activities: Activity[] }) {
                     </Stack>
                     <Stack direction="row" spacing={4}>
                       <Metric
-                        label="Vzdialenosť"
+                        label="Distance"
                         value={formatDistance(activity.distance)}
                       />
                       <Metric
-                        label="Čas"
+                        label="Time"
                         value={formatDuration(activity.moving_time)}
                       />
                       {activity.start_date && (
                         <Metric
-                          label="Dátum"
+                          label="Date"
                           value={new Date(
                             activity.start_date
                           ).toLocaleDateString()}
@@ -124,12 +142,6 @@ export function ActivityList({ activities }: { activities: Activity[] }) {
                   </Stack>
 
                   <Stack direction="row" spacing={1} alignItems="center">
-                    <Chip
-                      label={`ID: ${activity.id}`}
-                      size="small"
-                      variant="outlined"
-                      sx={{ opacity: 0.5, fontFamily: "monospace" }}
-                    />
                     <Button
                       variant="outlined"
                       size="small"
@@ -143,7 +155,7 @@ export function ActivityList({ activities }: { activities: Activity[] }) {
                         px: 1,
                         borderColor: "rgba(255,255,255,0.1)",
                       }}
-                      title="Otvoriť na Strave"
+                      title="Open on Strava"
                     >
                       <OpenInNewIcon fontSize="small" />
                     </Button>

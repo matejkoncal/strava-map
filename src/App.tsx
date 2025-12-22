@@ -48,7 +48,7 @@ function App() {
 
   const { activityCountries, geoJsonData } = useVisitedCountries(activities);
 
-  const [viewMode, setViewMode] = useState<"list" | "map" | "heatmap">("list");
+  const [viewMode, setViewMode] = useState<"list" | "map" | "heatmap">("heatmap");
   const [filterType, setFilterType] = useState<string>("All");
   const [dateRange, setDateRange] = useState<DateRange>("year");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
@@ -181,14 +181,14 @@ function App() {
                     size="small"
                     fullWidth={false}
                   >
+                    <ToggleButton value="heatmap" aria-label="heatmap view">
+                      <HeatmapIcon sx={{ mr: 1 }} /> Overview
+                    </ToggleButton>
                     <ToggleButton value="list" aria-label="list view">
                       <ListIcon sx={{ mr: 1 }} /> List
                     </ToggleButton>
                     <ToggleButton value="map" aria-label="map view">
                       <MapIcon sx={{ mr: 1 }} /> Map
-                    </ToggleButton>
-                    <ToggleButton value="heatmap" aria-label="heatmap view">
-                      <HeatmapIcon sx={{ mr: 1 }} /> Overview
                     </ToggleButton>
                   </ToggleButtonGroup>
 
@@ -270,6 +270,7 @@ function App() {
                 ) : (
                   <HeatmapView
                     activities={filteredActivities}
+                    visitedCountries={visibleCountries}
                     dateRange={dateRange}
                     year={
                       dateRange === "lastYear"
