@@ -105,6 +105,13 @@ export function MapView({
             style={{ width: "100%", height: "100%" }}
             gestureHandling={"greedy"}
             disableDefaultUI={true}
+            styles={[
+              {
+                featureType: "administrative.locality",
+                elementType: "labels",
+                stylers: [{ visibility: "off" }],
+              },
+            ]}
           >
             <CountriesLayer
               visitedCountries={visitedCountries}
