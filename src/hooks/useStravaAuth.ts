@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { httpsCallable } from "firebase/functions";
+import { getUnixTime, startOfYear, endOfYear } from "date-fns";
 import { functions } from "../firebase";
 import {
   STRAVA_CLIENT_ID,
@@ -24,6 +25,7 @@ export function useStravaAuth() {
   const [status, setStatus] = useState<AuthStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const processingCode = useRef(false);
+  const loadedYears = useRef<Set<number>>(new Set());
 
   const authUrl = useMemo(
     () =>
@@ -35,53 +37,76 @@ export function useStravaAuth() {
     []
   );
 
-  const loadActivities = useCallback(async (token: string) => {
-    try {
-      setStatus("loading");
-      setErrorMessage(null);
-
-      const stravaModule = await import("strava-v3");
-      const strava =
-        (stravaModule as unknown as { default?: unknown }).default ??
-        stravaModule;
-
-      // @ts-expect-error strava-v3 does not ship perfect types for ESM
-      strava.config({ access_token: token });
-
-      const allActivities: Activity[] = [];
-      let page = 1;
-      const perPage = 50;
-
-      while (true) {
-        // @ts-expect-error promise signature is not typed in the package
-        const list: Activity[] = await strava.athlete.listActivities({
-          per_page: perPage,
-          page: page,
-        });
-
-        if (!list || list.length === 0) {
-          break;
-        }
-
-        allActivities.push(...list);
-
-        if (list.length < perPage) {
-          break;
-        }
-
-        page++;
+  const loadActivitiesForYear = useCallback(
+    async (token: string, year: number) => {
+      if (loadedYears.current.has(year)) {
+        return;
       }
 
-      setActivities(allActivities);
-      setStatus("ready");
-    } catch (error) {
-      console.error(error);
-      setErrorMessage(
-        "Failed to load activities. Check CORS and access credentials."
-      );
-      setStatus("error");
-    }
-  }, []);
+      try {
+        setStatus("loading");
+        setErrorMessage(null);
+
+        const stravaModule = await import("strava-v3");
+        const strava =
+          (stravaModule as unknown as { default?: unknown }).default ??
+          stravaModule;
+
+        // @ts-expect-error strava-v3 does not ship perfect types for ESM
+        strava.config({ access_token: token });
+
+        const start = getUnixTime(startOfYear(new Date(year, 0, 1)));
+        const end = getUnixTime(endOfYear(new Date(year, 0, 1)));
+
+        const newActivities: Activity[] = [];
+        let page = 1;
+        const perPage = 50;
+
+        while (true) {
+          // @ts-expect-error promise signature is not typed in the package
+          const list: Activity[] = await strava.athlete.listActivities({
+            per_page: perPage,
+            page: page,
+            after: start,
+            before: end,
+          });
+
+          if (!list || list.length === 0) {
+            break;
+          }
+
+          newActivities.push(...list);
+
+          if (list.length < perPage) {
+            break;
+          }
+
+          page++;
+        }
+
+        setActivities((prev) => {
+          // Avoid duplicates just in case
+          const existingIds = new Set(prev.map((a) => a.id));
+          const uniqueNew = newActivities.filter((a) => !existingIds.has(a.id));
+          return [...prev, ...uniqueNew].sort((a, b) => {
+            return (
+              new Date(b.start_date || 0).getTime() -
+              new Date(a.start_date || 0).getTime()
+            );
+          });
+        });
+        loadedYears.current.add(year);
+        setStatus("ready");
+      } catch (error) {
+        console.error(error);
+        setErrorMessage(
+          "Failed to load activities. Check CORS and access credentials."
+        );
+        setStatus("error");
+      }
+    },
+    []
+  );
 
   const exchangeCodeForToken = useCallback(
     async (code: string) => {
@@ -114,7 +139,7 @@ export function useStravaAuth() {
           window.location.pathname
         );
 
-        await loadActivities(token);
+        await loadActivitiesForYear(token, new Date().getFullYear());
       } catch (error) {
         console.error(error);
         setErrorMessage(
@@ -123,12 +148,12 @@ export function useStravaAuth() {
         setStatus("error");
       }
     },
-    [loadActivities]
+    [loadActivitiesForYear]
   );
 
   useEffect(() => {
     if (accessToken) {
-      void loadActivities(accessToken);
+      void loadActivitiesForYear(accessToken, new Date().getFullYear());
       return;
     }
 
@@ -139,12 +164,13 @@ export function useStravaAuth() {
       processingCode.current = true;
       void exchangeCodeForToken(code);
     }
-  }, [accessToken, loadActivities, exchangeCodeForToken]);
+  }, [accessToken, loadActivitiesForYear, exchangeCodeForToken]);
 
   const handleReset = () => {
     localStorage.removeItem(STORAGE_KEY);
     setAccessToken(null);
     setActivities([]);
+    loadedYears.current.clear();
     setStatus("idle");
     setErrorMessage(null);
   };
@@ -156,5 +182,6 @@ export function useStravaAuth() {
     errorMessage,
     authUrl,
     handleReset,
+    loadActivitiesForYear,
   };
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   Alert,
   Box,
@@ -42,15 +42,23 @@ function App() {
     errorMessage,
     authUrl,
     handleReset,
+    loadActivitiesForYear,
   } = useStravaAuth();
 
-  const { visitedCountries, activityCountries, geoJsonData } =
+  const { activityCountries, geoJsonData } =
     useVisitedCountries(activities);
 
   const [viewMode, setViewMode] = useState<"list" | "map" | "heatmap">("list");
   const [filterType, setFilterType] = useState<string>("All");
   const [dateRange, setDateRange] = useState<DateRange>("year");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+
+  // Load previous year if selected
+  useEffect(() => {
+    if (dateRange === "lastYear" && accessToken) {
+      void loadActivitiesForYear(accessToken, new Date().getFullYear() - 1);
+    }
+  }, [dateRange, accessToken, loadActivitiesForYear]);
 
   const filteredActivities = useMemo(() => {
     let filtered = activities;
@@ -106,6 +114,15 @@ function App() {
 
     return filtered;
   }, [activities, filterType, selectedCountry, activityCountries, dateRange]);
+
+  const visibleCountries = useMemo(() => {
+    const countries = new Set<string>();
+    filteredActivities.forEach((a) => {
+      const code = activityCountries.get(a.id);
+      if (code) countries.add(code);
+    });
+    return countries;
+  }, [filteredActivities, activityCountries]);
 
   const activityTypes = useMemo(() => {
     const types = new Set(
@@ -230,13 +247,13 @@ function App() {
               >
                 {viewMode === "list" ? (
                   <>
-                    {visitedCountries.size > 0 && (
+                    {visibleCountries.size > 0 && (
                       <Box sx={{ mb: 2 }}>
                         <Typography variant="caption" color="text.secondary">
                           Visited Countries:
                         </Typography>
                         <CountryFlags
-                          countries={visitedCountries}
+                          countries={visibleCountries}
                           selectedCountry={selectedCountry}
                           onSelectCountry={setSelectedCountry}
                         />
@@ -247,7 +264,7 @@ function App() {
                 ) : viewMode === "map" ? (
                   <MapView
                     activities={filteredActivities}
-                    visitedCountries={visitedCountries}
+                    visitedCountries={visibleCountries}
                     geoJsonData={geoJsonData}
                   />
                 ) : (
