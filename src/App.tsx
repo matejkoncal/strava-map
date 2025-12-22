@@ -32,6 +32,7 @@ import { MapView } from "./components/MapView";
 import { HeatmapView } from "./components/HeatmapView";
 import { DateFilter } from "./components/DateFilter";
 import { Footer } from "./components/Footer";
+import { BuyMeCoffeeFab } from "./components/BuyMeCoffeeFab";
 import type { DateRange } from "./components/DateFilter";
 
 function App() {
@@ -45,8 +46,7 @@ function App() {
     loadActivitiesForYear,
   } = useStravaAuth();
 
-  const { activityCountries, geoJsonData } =
-    useVisitedCountries(activities);
+  const { activityCountries, geoJsonData } = useVisitedCountries(activities);
 
   const [viewMode, setViewMode] = useState<"list" | "map" | "heatmap">("list");
   const [filterType, setFilterType] = useState<string>("All");
@@ -306,6 +306,7 @@ function App() {
           )}
         </Stack>
       </Container>
+      <BuyMeCoffeeFab />
       <Footer />
     </Box>
   );

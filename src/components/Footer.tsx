@@ -48,19 +48,6 @@ export function Footer() {
 
             <Stack direction="row" spacing={2}>
               <Button
-                startIcon={<LocalCafe />}
-                size="small"
-                color="inherit"
-                href="https://buymeacoffee.com/justdorecap"
-                target="_blank"
-                sx={{
-                  color: "#FFDD00",
-                  "&:hover": { bgcolor: "rgba(255, 221, 0, 0.08)" },
-                }}
-              >
-                Buy us a coffee
-              </Button>
-              <Button
                 startIcon={<Info />}
                 size="small"
                 color="inherit"
