@@ -170,9 +170,48 @@ function App() {
           {status === "ready" && activities.length > 0 && (
             <Stack spacing={{ xs: 2, md: 3 }}>
               <Stack spacing={2}>
+                <Box sx={{ display: { xs: "none", md: "block" } }}>
+                  <DateFilter
+                    selectedRange={dateRange}
+                    onSelectRange={setDateRange}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    display: { xs: "block", md: "none" },
+                    width: "100%",
+                    overflowX: "auto",
+                    pb: 1,
+                  }}
+                >
+                  <DateFilter
+                    selectedRange={dateRange}
+                    onSelectRange={setDateRange}
+                  />
+                </Box>
+
                 <Stack
                   direction="row"
-                  justifyContent="space-between"
+                  spacing={1}
+                  alignItems="center"
+                  flexWrap="wrap"
+                  useFlexGap
+                >
+                  <FilterIcon color="action" />
+                  {activityTypes.map((type) => (
+                    <Chip
+                      key={type}
+                      label={type}
+                      onClick={() => setFilterType(type)}
+                      color={filterType === type ? "primary" : "default"}
+                      variant={filterType === type ? "filled" : "outlined"}
+                      clickable
+                    />
+                  ))}
+                </Stack>
+
+                <Stack
+                  direction="row"
                   alignItems="center"
                 >
                   <ToggleButtonGroup
@@ -193,48 +232,7 @@ function App() {
                       <MapIcon sx={{ mr: 1 }} /> Map
                     </ToggleButton>
                   </ToggleButtonGroup>
-
-                  <Box sx={{ display: { xs: "none", md: "block" } }}>
-                    <DateFilter
-                      selectedRange={dateRange}
-                      onSelectRange={setDateRange}
-                    />
-                  </Box>
                 </Stack>
-
-                <Box
-                  sx={{
-                    display: { xs: "block", md: "none" },
-                    width: "100%",
-                    overflowX: "auto",
-                    pb: 1,
-                  }}
-                >
-                  <DateFilter
-                    selectedRange={dateRange}
-                    onSelectRange={setDateRange}
-                  />
-                </Box>
-              </Stack>
-
-              <Stack
-                direction="row"
-                spacing={1}
-                alignItems="center"
-                flexWrap="wrap"
-                useFlexGap
-              >
-                <FilterIcon color="action" />
-                {activityTypes.map((type) => (
-                  <Chip
-                    key={type}
-                    label={type}
-                    onClick={() => setFilterType(type)}
-                    color={filterType === type ? "primary" : "default"}
-                    variant={filterType === type ? "filled" : "outlined"}
-                    clickable
-                  />
-                ))}
               </Stack>
 
               <Box
