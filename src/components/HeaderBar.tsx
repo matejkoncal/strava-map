@@ -27,14 +27,6 @@ export function HeaderBar({
         />
         <Box>
           <Typography
-            variant="caption"
-            color="text.secondary"
-            fontWeight={500}
-            letterSpacing={1}
-          >
-            JUST DO RECAP
-          </Typography>
-          <Typography
             variant="h4"
             fontWeight="bold"
             sx={{
@@ -46,7 +38,7 @@ export function HeaderBar({
               WebkitTextFillColor: "transparent",
             }}
           >
-            Activity Insights
+            JUST DO RECAP
           </Typography>
         </Box>
       </Stack>
