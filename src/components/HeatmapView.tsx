@@ -483,12 +483,12 @@ export function HeatmapView({
           gap: 4,
         }}
       >
-        <Box sx={{ mt: 4, textAlign: "center" }}>
+        <Box sx={{ mt: 12, textAlign: "center" }}>
           <Typography
             variant="h2"
             fontWeight="bold"
             color="primary"
-            sx={{ fontSize: "5rem", lineHeight: 1 }}
+            sx={{ fontSize: "6rem", lineHeight: 1 }}
           >
             {year}
           </Typography>
@@ -496,6 +496,17 @@ export function HeatmapView({
             {getTitle()}
           </Typography>
         </Box>
+
+        {/* Country Flags */}
+        {visitedCountries.size > 0 && (
+          <Box sx={{ transform: "scale(1.5)", transformOrigin: "center", mb: 2 }}>
+            <CountryFlags
+              countries={visitedCountries}
+              selectedCountry={null}
+              onSelectCountry={() => {}}
+            />
+          </Box>
+        )}
 
         <Stack direction="row" spacing={8} sx={{ mb: 2 }}>
           <Box textAlign="center">
@@ -524,17 +535,6 @@ export function HeatmapView({
           </Box>
         </Stack>
 
-        {/* Country Flags */}
-        {visitedCountries.size > 0 && (
-          <Box sx={{ transform: "scale(1.5)", transformOrigin: "center" }}>
-            <CountryFlags
-              countries={visitedCountries}
-              selectedCountry={null}
-              onSelectCountry={() => {}}
-            />
-          </Box>
-        )}
-
         {/* Vertical Heatmap for Story */}
         <Box
           sx={{
@@ -562,8 +562,8 @@ export function HeatmapView({
                 key={i}
                 sx={{
                   display: "grid",
-                  gridTemplateColumns: "40px repeat(7, 24px)",
-                  gap: "4px",
+                  gridTemplateColumns: "36px repeat(7, 18px)",
+                  gap: "3px",
                 }}
               >
                 <Box
@@ -571,7 +571,7 @@ export function HeatmapView({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "flex-end",
-                    pr: 1,
+                    pr: 0.75,
                   }}
                 >
                   {monthLabel && (
@@ -581,7 +581,7 @@ export function HeatmapView({
                         fontWeight: "bold",
                         color: "text.secondary",
                         textTransform: "uppercase",
-                        fontSize: "1rem",
+                        fontSize: "0.9rem",
                       }}
                     >
                       {monthLabel}
@@ -605,12 +605,12 @@ export function HeatmapView({
                     <Box
                       key={dateStr}
                       sx={{
-                        width: 24,
-                        height: 24,
+                        width: 18,
+                        height: 18,
                         bgcolor: hasActivity
                           ? getIntensityColor(dayActivities)
                           : "rgba(128,128,128,0.1)",
-                        borderRadius: 1,
+                        borderRadius: 0.5,
                         opacity: isFuture ? 0.3 : 1,
                       }}
                     />
@@ -623,7 +623,7 @@ export function HeatmapView({
 
         <Box sx={{ mt: "auto", pb: 4 }}>
           <Typography variant="h5" color="text.secondary" sx={{ opacity: 0.7 }}>
-            strava-map
+            #justdorecap
           </Typography>
         </Box>
       </Box>
