@@ -38,10 +38,10 @@ export function CountriesLayer({
       const isVisited = visitedCountries.has(countryCode);
 
       return {
-        fillColor: isVisited ? "#6366f1" : "#0f172a", // Indigo for visited, Dark Slate for others
-        fillOpacity: isVisited ? 0.5 : 0.8,
-        strokeColor: "#334155",
-        strokeWeight: 1,
+        fillColor: isVisited ? "#f97316" : "#0b1324", // Warm accent for visited, deep slate for others
+        fillOpacity: isVisited ? 0.85 : 0.4,
+        strokeColor: isVisited ? "#fb923c" : "#1f2937",
+        strokeWeight: isVisited ? 1.25 : 1,
         visible: true,
         clickable: false,
       };

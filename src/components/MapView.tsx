@@ -111,6 +111,25 @@ export function MapView({
                 elementType: "labels",
                 stylers: [{ visibility: "off" }],
               },
+              {
+                featureType: "water",
+                elementType: "geometry",
+                stylers: [{ color: "#0b1224" }],
+              },
+              {
+                featureType: "water",
+                elementType: "labels",
+                stylers: [{ visibility: "off" }],
+              },
+              {
+                featureType: "landscape.natural",
+                elementType: "geometry",
+                stylers: [
+                  { color: "#0f172a" },
+                  { saturation: -10 },
+                  { lightness: -10 },
+                ],
+              },
             ]}
           >
             <CountriesLayer
