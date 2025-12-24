@@ -108,6 +108,18 @@ export function MapView({
             styles={[
               {
                 featureType: "administrative.locality",
+                stylers: [{ visibility: "off" }],
+              },
+              {
+                featureType: "administrative.neighborhood",
+                stylers: [{ visibility: "off" }],
+              },
+              {
+                featureType: "poi",
+                stylers: [{ visibility: "off" }],
+              },
+              {
+                featureType: "road",
                 elementType: "labels",
                 stylers: [{ visibility: "off" }],
               },
