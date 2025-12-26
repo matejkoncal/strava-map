@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { AdvancedMarker, Pin, useMap } from "@vis.gl/react-google-maps";
+import { Marker, useMap } from "@vis.gl/react-google-maps";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import type { Marker } from "@googlemaps/markerclusterer";
+import type { Marker as GoogleMarker } from "@googlemaps/markerclusterer";
 import type { Activity } from "../types";
 
 function ClusterMarker({
@@ -13,7 +13,7 @@ function ClusterMarker({
   clusterer: MarkerClusterer | null;
   onClick: (activity: Activity) => void;
 }) {
-  const [marker, setMarker] = useState<Marker | null>(null);
+  const [marker, setMarker] = useState<GoogleMarker | null>(null);
 
   useEffect(() => {
     if (marker && clusterer) {
@@ -25,20 +25,14 @@ function ClusterMarker({
   }, [marker, clusterer]);
 
   return (
-    <AdvancedMarker
+    <Marker
       position={{
         lat: activity.start_latlng![0],
         lng: activity.start_latlng![1],
       }}
       ref={setMarker}
       onClick={() => onClick(activity)}
-    >
-      <Pin
-        background={"#6366f1"}
-        borderColor={"#4338ca"}
-        glyphColor={"white"}
-      />
-    </AdvancedMarker>
+    />
   );
 }
 

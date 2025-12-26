@@ -55,6 +55,52 @@ export function MapView({
     lng: activitiesWithCoords[0].start_latlng![1],
   };
 
+  const mapStyles = showCountries
+    ? [
+        {
+          featureType: "administrative.locality",
+          stylers: [{ visibility: "off" }],
+        },
+        {
+          featureType: "administrative.neighborhood",
+          stylers: [{ visibility: "off" }],
+        },
+        {
+          featureType: "poi",
+          stylers: [{ visibility: "off" }],
+        },
+        {
+          featureType: "road",
+          elementType: "labels",
+          stylers: [{ visibility: "off" }],
+        },
+        {
+          featureType: "water",
+          elementType: "geometry",
+          stylers: [{ color: "#475569" }],
+        },
+        {
+          featureType: "water",
+          elementType: "labels",
+          stylers: [{ visibility: "off" }],
+        },
+        {
+          featureType: "landscape",
+          elementType: "geometry",
+          stylers: [
+            { color: "#1e293b" },
+            { saturation: -10 },
+            { lightness: -10 },
+          ],
+        },
+        {
+          featureType: "landscape.man_made",
+          elementType: "geometry",
+          stylers: [{ visibility: "off" }],
+        },
+      ]
+    : [];
+
   return (
     <Stack spacing={2}>
       <Stack direction="row" spacing={2} justifyContent="flex-end">
@@ -101,48 +147,10 @@ export function MapView({
           <Map
             defaultCenter={center}
             defaultZoom={10}
-            mapId="DEMO_MAP_ID"
             style={{ width: "100%", height: "100%" }}
             gestureHandling={"greedy"}
             disableDefaultUI={true}
-            styles={[
-              {
-                featureType: "administrative.locality",
-                stylers: [{ visibility: "off" }],
-              },
-              {
-                featureType: "administrative.neighborhood",
-                stylers: [{ visibility: "off" }],
-              },
-              {
-                featureType: "poi",
-                stylers: [{ visibility: "off" }],
-              },
-              {
-                featureType: "road",
-                elementType: "labels",
-                stylers: [{ visibility: "off" }],
-              },
-              {
-                featureType: "water",
-                elementType: "geometry",
-                stylers: [{ color: "#0b1224" }],
-              },
-              {
-                featureType: "water",
-                elementType: "labels",
-                stylers: [{ visibility: "off" }],
-              },
-              {
-                featureType: "landscape.natural",
-                elementType: "geometry",
-                stylers: [
-                  { color: "#0f172a" },
-                  { saturation: -10 },
-                  { lightness: -10 },
-                ],
-              },
-            ]}
+            styles={mapStyles}
           >
             <CountriesLayer
               visitedCountries={visitedCountries}
