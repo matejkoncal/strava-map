@@ -1,5 +1,4 @@
 import { Button, Card, CardContent, Stack, Typography } from "@mui/material";
-import { DirectionsBike as BikeIcon } from "@mui/icons-material";
 
 export function Hero({ onLoginClick }: { onLoginClick: () => void }) {
   return (
@@ -37,8 +36,7 @@ export function Hero({ onLoginClick }: { onLoginClick: () => void }) {
               color="text.secondary"
               sx={{ fontWeight: 400, lineHeight: 1.6 }}
             >
-              Explore your activities through interactive maps, heatmaps, and
-              detailed statistics. Log in to discover your personal recap.
+              Explore your activities, generate beautiful recaps, and share them with your friends. Log in to get started!
             </Typography>
           </Stack>
 
@@ -50,7 +48,6 @@ export function Hero({ onLoginClick }: { onLoginClick: () => void }) {
             <Button
               variant="contained"
               size="large"
-              startIcon={<BikeIcon />}
               onClick={onLoginClick}
               sx={{
                 px: 4,
