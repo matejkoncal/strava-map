@@ -127,10 +127,10 @@ function App() {
 
   const activityTypes = useMemo(() => {
     const types = new Set(
-      activities.map((a) => a.sport_type).filter((t): t is SportType => !!t)
+      filteredActivities.map((a) => a.sport_type).filter((t): t is SportType => !!t)
     );
     return ["All", ...Array.from(types)];
-  }, [activities]);
+  }, [filteredActivities]);
 
   const showLoader = status === "loading" || status === "exchanging";
   const isLoggedIn = Boolean(accessToken);
