@@ -7,6 +7,7 @@ import {
   Typography,
   Tooltip,
   useTheme,
+  Chip,
 } from "@mui/material";
 import {
   Download as DownloadIcon,
@@ -26,11 +27,13 @@ import {
 } from "date-fns";
 import { enUS } from "date-fns/locale";
 import html2canvas from "html2canvas";
-import type { Activity } from "../types";
-import { formatDistance, formatDuration } from "../utils/format";
+import type { Activity, SportType } from "../types";
+import { formatDistance, formatDuration, formatDurationHoursOnly } from "../utils/format";
 import type { DateRange } from "./DateFilter";
 import { ActivityDetailDialog } from "./ActivityDetailDialog";
 import { CountryFlags } from "./CountryFlags";
+import { getActivityLabel } from "../utils/getActivityLabel";
+import { getActivityIcon } from "../utils/getActivityIcon";
 
 interface HeatmapViewProps {
   activities: Activity[];
@@ -111,6 +114,14 @@ export function HeatmapView({
       activityMap: map,
     };
   }, [activities, year, dateRange]);
+
+  const sportTypes = useMemo(
+    () => Array.from(new Set(activities.map((a) => a.sport_type))),
+    [activities]
+  );
+  const MAX_SPORTS = 15;
+  const displayedSports = sportTypes.slice(0, MAX_SPORTS);
+  const hiddenCount = sportTypes.length - MAX_SPORTS;
 
   const handleExport = async () => {
     // Use storyRef if available, otherwise fallback to exportRef
@@ -475,155 +486,259 @@ export function HeatmapView({
           width: 1080,
           height: 1920,
           bgcolor: "background.paper",
-          p: 6,
+          p: 8,
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          gap: 4,
+          justifyContent: "space-between",
+          fontFamily: "'Montserrat', sans-serif",
         }}
       >
-        <Box sx={{ mt: 12, textAlign: "center" }}>
-          <Typography
-            variant="h2"
-            fontWeight="bold"
-            color="primary"
-            sx={{ fontSize: "6rem", lineHeight: 1 }}
-          >
-            {year}
-          </Typography>
-          <Typography variant="h4" color="text.secondary" sx={{ mt: 1 }}>
-            {getTitle()}
-          </Typography>
-        </Box>
-
-        {/* Country Flags */}
-        {visitedCountries.size > 0 && (
-          <Box sx={{ transform: "scale(1.5)", transformOrigin: "center", mb: 2 }}>
-            <CountryFlags
-              countries={visitedCountries}
-              selectedCountry={null}
-              onSelectCountry={() => {}}
-            />
-          </Box>
-        )}
-
-        <Stack direction="row" spacing={8} sx={{ mb: 2 }}>
-          <Box textAlign="center">
-            <Typography variant="h3" fontWeight="bold">
-              {formatDistance(stats.distance)}
-            </Typography>
-            <Typography variant="h5" color="text.secondary">
-              Distance
-            </Typography>
-          </Box>
-          <Box textAlign="center">
-            <Typography variant="h3" fontWeight="bold">
-              {formatDuration(stats.time)}
-            </Typography>
-            <Typography variant="h5" color="text.secondary">
-              Time
-            </Typography>
-          </Box>
-          <Box textAlign="center">
-            <Typography variant="h3" fontWeight="bold">
-              {stats.count}
-            </Typography>
-            <Typography variant="h5" color="text.secondary">
-              Activities
-            </Typography>
-          </Box>
-        </Stack>
-
-        {/* Vertical Heatmap for Story */}
         <Box
+        pt={16}
           sx={{
             display: "flex",
-            flexDirection: "column",
-            gap: "4px",
+            flexDirection: "row",
+            flex: 1,
             width: "100%",
-            alignItems: "center",
+            alignItems: "flex-start",
+            justifyContent: "center",
+            gap: 10,
           }}
         >
-          {/* Weeks Rows */}
-          {weeks.map((week, i) => {
-            const firstDayOfWeek = week[0];
-            const isFirstWeekOfMonth = firstDayOfWeek.getDate() <= 7;
-            const showMonthLabel =
-              isFirstWeekOfMonth ||
-              (i === 0 && dateRange !== "year" && dateRange !== "lastYear");
+          <Box sx={{ minWidth: 260, pl: 8, pt: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "4px",
+                width: "100%",
+                alignItems: "center",
+              }}
+            >
+              {weeks.map((week, i) => {
+                const firstDayOfWeek = week[0];
+                const isFirstWeekOfMonth = firstDayOfWeek.getDate() <= 7;
+                const showMonthLabel =
+                  isFirstWeekOfMonth ||
+                  (i === 0 && dateRange !== "year" && dateRange !== "lastYear");
 
-            const monthLabel = showMonthLabel
-              ? format(firstDayOfWeek, "MMM", { locale: enUS })
-              : null;
+                const monthLabel = showMonthLabel
+                  ? format(firstDayOfWeek, "MMM", { locale: enUS })
+                  : null;
 
-            return (
-              <Box
-                key={i}
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "36px repeat(7, 18px)",
-                  gap: "3px",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    pr: 0.75,
-                  }}
-                >
-                  {monthLabel && (
-                    <Typography
-                      variant="h6"
+                return (
+                  <Box
+                    key={i}
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: "44px repeat(7, 22px)",
+                      gap: "4px",
+                    }}
+                  >
+                    <Box
                       sx={{
-                        fontWeight: "bold",
-                        color: "text.secondary",
-                        textTransform: "uppercase",
-                        fontSize: "0.9rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                        pr: 0.75,
                       }}
                     >
-                      {monthLabel}
-                    </Typography>
-                  )}
-                </Box>
-                {week.map((day) => {
-                  const dateStr = format(day, "yyyy-MM-dd");
-                  const dayActivities = activityMap.get(dateStr) || [];
-                  const hasActivity = dayActivities.length > 0;
-                  const isFuture = day > new Date();
-                  const isCurrentYear = day.getFullYear() === year;
-                  const shouldShow =
-                    dateRange === "year" || dateRange === "lastYear"
-                      ? isCurrentYear
-                      : true;
+                      {monthLabel && (
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: "bold",
+                            color: "text.secondary",
+                            textTransform: "uppercase",
+                            fontSize: "0.9rem",
+                          }}
+                        >
+                          {monthLabel}
+                        </Typography>
+                      )}
+                    </Box>
+                    {week.map((day) => {
+                      const dateStr = format(day, "yyyy-MM-dd");
+                      const dayActivities = activityMap.get(dateStr) || [];
+                      const hasActivity = dayActivities.length > 0;
+                      const isFuture = day > new Date();
+                      const isCurrentYear = day.getFullYear() === year;
+                      const shouldShow =
+                        dateRange === "year" || dateRange === "lastYear"
+                          ? isCurrentYear
+                          : true;
 
-                  if (!shouldShow) return <Box key={dateStr} />;
+                      if (!shouldShow) return <Box key={dateStr} />;
 
-                  return (
-                    <Box
-                      key={dateStr}
-                      sx={{
-                        width: 18,
-                        height: 18,
-                        bgcolor: hasActivity
-                          ? getIntensityColor(dayActivities)
-                          : "rgba(128,128,128,0.1)",
-                        borderRadius: 0.5,
-                        opacity: isFuture ? 0.3 : 1,
-                      }}
-                    />
-                  );
-                })}
+                      return (
+                        <Box
+                          key={dateStr}
+                          sx={{
+                            width: 22,
+                            height: 22,
+                            bgcolor: hasActivity
+                              ? getIntensityColor(dayActivities)
+                              : "rgba(128,128,128,0.1)",
+                            borderRadius: 0.5,
+                            opacity: isFuture ? 0.3 : 1,
+                          }}
+                        />
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              pl: 8,
+            }}
+          >
+            <Typography
+              variant="h1"
+              sx={{
+                fontWeight: 800,
+                fontSize: "9rem",
+                fontFamily: "'Montserrat', sans-serif",
+                color: "#fff",
+                lineHeight: 1,
+                mb: 4,
+              }}
+            >
+              {year}
+            </Typography>
+
+            {visitedCountries.size > 0 && (
+              <Box
+                sx={{ mb: 6, transform: "scale(2)", transformOrigin: "left" }}
+              >
+                <CountryFlags
+                  countries={visitedCountries}
+                  selectedCountry={null}
+                  onSelectCountry={() => {}}
+                />
               </Box>
-            );
-          })}
-        </Box>
+            )}
 
-        <Box sx={{ mt: "auto", pb: 4 }}>
-          <Typography variant="h5" color="text.secondary" sx={{ opacity: 0.7 }}>
-            #justdorecap
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="h4" sx={{ color: "#fff"  }}>
+                Total Distance:
+              </Typography>
+              <Typography
+                variant="h2"
+                sx={{
+                  mb: 2,
+                  fontFamily: "'Bebas Neue'",
+                  fontWeight: 500,
+                  fontSize: "10rem",
+                  color: "#fff",
+                }}
+              >
+                {formatDistance(stats.distance)}
+                <span
+                  style={{
+                    fontFamily: "'Montserrat'",
+                    fontSize: "2rem",
+                    color: "#fff",
+                    marginLeft: "0.5em",
+                  }}
+                >
+                  km
+                </span>
+              </Typography>
+              <Typography variant="h4" sx={{ color: "#fff" }}>
+                Total Time:
+              </Typography>
+              <Typography
+                variant="h2"
+                sx={{
+                  fontFamily: "'Bebas Neue'",
+                  fontWeight: 500,
+                  fontSize: "10rem",
+                  color: "#fff",
+                  mb: 2,
+                }}
+              >
+                {formatDurationHoursOnly(stats.time)}
+                <span
+                  style={{
+                    fontFamily: "'Montserrat'",
+                    fontSize: "2rem",
+                    color: "#fff",
+                    marginLeft: "0.5em",
+                  }}
+                >
+                  hrs
+                </span>
+              </Typography>
+              <Typography variant="h4" sx={{ color: "#fff" }}>
+                Number of Activities:
+              </Typography>
+              <Typography
+                variant="h2"
+                sx={{
+                  fontFamily: "'Bebas Neue'",
+                  fontWeight: 500,
+                  fontSize: "10rem",
+                  color: "#fff",
+                }}
+              >
+                {stats.count}
+              </Typography>
+            </Box>
+
+            <Box sx={{ mb: 6 }}>
+              <Typography variant="h4" sx={{ color: "#fff", mb: 2 }}>
+                Activities:
+              </Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+                {displayedSports.map((type) => (
+                  <Chip
+                    key={type}
+                    label={getActivityLabel(type as SportType)}
+                    color="primary"
+                    variant="outlined"
+                    clickable={false}
+                    icon={getActivityIcon(type as SportType)}
+                    sx={{
+                      fontSize: "1.7rem",
+                      height: 56,
+                    }}
+                  />
+                ))}
+                {hiddenCount > 0 && (
+                  <Chip
+                    label={`+${hiddenCount} more`}
+                    color="primary"
+                    variant="outlined"
+                    sx={{
+                      fontSize: "1.7rem",
+                      height: 56,
+                      opacity: 0.7,
+                    }}
+                  />
+                )}
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+        <Box sx={{ width: "100%", textAlign: "center", pb: 16 }}>
+          <Typography
+            variant="h3"
+            color="#fff"
+            sx={{
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 1000,
+              fontStyle: "italic",
+              opacity: 0.8,
+            }}
+          >
+            Just Do Recap
           </Typography>
         </Box>
       </Box>

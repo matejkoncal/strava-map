@@ -1,6 +1,6 @@
 export function formatDistance(meters?: number) {
   if (!meters) return "—";
-  return `${(meters / 1000).toFixed(1)} km`;
+  return `${(meters / 1000).toFixed(1)}`;
 }
 
 export function formatDuration(seconds?: number) {
@@ -12,6 +12,12 @@ export function formatDuration(seconds?: number) {
     return `${hours}h ${remainingMins}m`;
   }
   return `${mins}m`;
+}
+
+export function formatDurationHoursOnly(seconds?: number) {
+  if (!seconds) return "—";
+  const hours = seconds / 3600;
+  return `${hours.toFixed(1)}`;
 }
 
 export function getFlagEmoji(countryCode: string) {
