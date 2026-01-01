@@ -24,9 +24,8 @@ export function DateFilter({ selectedRange, onSelectRange }: DateFilterProps) {
           key={range.value}
           label={range.label}
           onClick={() => onSelectRange(range.value)}
-          color={selectedRange === range.value ? "secondary" : "default"}
+          color={selectedRange === range.value ? "primary" : "default"}
           variant={selectedRange === range.value ? "filled" : "outlined"}
-          size="small"
           clickable
         />
       ))}
