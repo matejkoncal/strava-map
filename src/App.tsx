@@ -34,6 +34,8 @@ import { DateFilter } from "./components/DateFilter";
 import { Footer } from "./components/Footer";
 import { BuyMeCoffeeFab } from "./components/BuyMeCoffeeFab";
 import type { DateRange } from "./components/DateFilter";
+import type { SportType } from "./types";
+import { getActivityLabel } from "./utils/getActivityLabel";
 
 function App() {
   const {
@@ -67,7 +69,7 @@ function App() {
 
     // Filter by Type
     if (filterType !== "All") {
-      filtered = filtered.filter((a) => a.type === filterType);
+      filtered = filtered.filter((a) => a.sport_type === filterType);
     }
 
     // Filter by Country
@@ -128,7 +130,7 @@ function App() {
 
   const activityTypes = useMemo(() => {
     const types = new Set(
-      activities.map((a) => a.type).filter((t): t is string => !!t)
+      activities.map((a) => a.sport_type).filter((t): t is SportType => !!t)
     );
     return ["All", ...Array.from(types)];
   }, [activities]);
@@ -201,7 +203,7 @@ function App() {
                   {activityTypes.map((type) => (
                     <Chip
                       key={type}
-                      label={type}
+                      label={type === "All"? "All": getActivityLabel(type as SportType)}
                       onClick={() => setFilterType(type)}
                       color={filterType === type ? "primary" : "default"}
                       variant={filterType === type ? "filled" : "outlined"}

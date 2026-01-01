@@ -13,8 +13,6 @@ import {
   IconButton,
 } from "@mui/material";
 import {
-  DirectionsRun as RunIcon,
-  DirectionsBike as BikeIcon,
   OpenInNew as OpenInNewIcon,
   Speed as SpeedIcon,
   Terrain as ElevationIcon,
@@ -31,6 +29,9 @@ import {
   formatElevation,
   formatSpeed,
 } from "../utils/format";
+import { getActivityIcon } from "../utils/getActivityIcon";
+import { getActivityLabel } from "../utils/getActivityLabel";
+
 
 interface ActivityDetailDialogProps {
   activity?: Activity | null;
@@ -137,11 +138,7 @@ export function ActivityDetailDialog({
                     <Typography variant="subtitle1" fontWeight="bold">
                       {a.name}
                     </Typography>
-                    {a.type === "Run" ? (
-                      <RunIcon fontSize="small" color="primary" />
-                    ) : (
-                      <BikeIcon fontSize="small" color="primary" />
-                    )}
+                    {getActivityIcon(a.sport_type)}
                   </Stack>
                   <Typography variant="caption" color="text.secondary">
                     {formatDistance(a.distance)} •{" "}
@@ -196,18 +193,12 @@ export function ActivityDetailDialog({
                 {currentActivity.name}
               </Typography>
             </Stack>
-            {currentActivity.type && (
+            {currentActivity.sport_type && (
               <Chip
-                label={currentActivity.type}
+                label={getActivityLabel(currentActivity.sport_type)}
                 color="primary"
                 size="small"
-                icon={
-                  currentActivity.type === "Run" ? (
-                    <RunIcon fontSize="small" />
-                  ) : (
-                    <BikeIcon fontSize="small" />
-                  )
-                }
+                icon={getActivityIcon(currentActivity.sport_type)}
               />
             )}
           </Stack>

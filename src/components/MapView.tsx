@@ -15,6 +15,7 @@ import { GOOGLE_MAPS_API_KEY } from "../constants";
 import { formatDistance, formatDuration } from "../utils/format";
 import { CountriesLayer } from "./CountriesLayer";
 import { Markers } from "./Markers";
+import { getActivityLabel } from "../utils/getActivityLabel";
 
 export function MapView({
   activities,
@@ -183,7 +184,7 @@ export function MapView({
                   </Typography>
                   <Stack direction="row" spacing={1} alignItems="center">
                     <Chip
-                      label={selectedActivity.type}
+                      label={getActivityLabel(selectedActivity.sport_type)}
                       size="small"
                       color="primary"
                       sx={{ height: 20, fontSize: "0.7rem" }}

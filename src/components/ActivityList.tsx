@@ -9,14 +9,14 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  DirectionsRun as RunIcon,
-  DirectionsBike as BikeIcon,
   OpenInNew as OpenInNewIcon,
   Timeline as TimelineIcon,
 } from "@mui/icons-material";
 import type { Activity } from "../types";
 import { formatDistance, formatDuration } from "../utils/format";
 import { ActivityDetailDialog } from "./ActivityDetailDialog";
+import { getActivityIcon } from "../utils/getActivityIcon";
+import { getActivityLabel } from "../utils/getActivityLabel";
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
@@ -85,7 +85,7 @@ export function ActivityList({ activities }: { activities: Activity[] }) {
               sx={{
                 cursor: "pointer",
                 transition: "transform 0.2s, box-shadow 0.2s",
-                borderRight: `6px solid ${getActivityColor(activity.type)}`,
+                borderRight: `6px solid ${getActivityColor(activity.sport_type)}`,
                 "&:hover": {
                   transform: "translateY(-4px)",
                   boxShadow: "0 12px 40px rgba(0,0,0,0.2)",
@@ -105,19 +105,13 @@ export function ActivityList({ activities }: { activities: Activity[] }) {
                       <Typography variant="h6" fontWeight="bold">
                         {activity.name || "Untitled"}
                       </Typography>
-                      {activity.type && (
+                      {activity.sport_type && (
                         <Chip
-                          label={activity.type}
+                          label={getActivityLabel(activity.sport_type)}
                           size="small"
                           color="primary"
                           variant="outlined"
-                          icon={
-                            activity.type === "Run" ? (
-                              <RunIcon fontSize="small" />
-                            ) : (
-                              <BikeIcon fontSize="small" />
-                            )
-                          }
+                          icon={getActivityIcon(activity.sport_type)}
                         />
                       )}
                     </Stack>
