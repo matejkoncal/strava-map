@@ -10,7 +10,7 @@ interface DateFilterProps {
 
 export function DateFilter({ selectedRange, onSelectRange }: DateFilterProps) {
   const ranges: { value: DateRange; label: string }[] = [
-    { value: "week", label: "This Week" },
+    // { value: "week", label: "This Week" },
     { value: "month", label: "This Month" },
     { value: "year", label: "This Year" },
     { value: "lastYear", label: "Last Year" },
