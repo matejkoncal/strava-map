@@ -36,9 +36,11 @@ export function HeaderBar({
               textFillColor: "transparent",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
+              fontStyle: "italic",
+              overflow: "visible",
             }}
           >
-            JUST DO RECAP
+            Just Do Recap
           </Typography>
         </Box>
       </Stack>
