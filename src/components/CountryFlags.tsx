@@ -4,10 +4,12 @@ export function CountryFlags({
   countries,
   selectedCountry,
   onSelectCountry,
+  flagSize = 20,
 }: {
   countries: Set<string>;
   selectedCountry: string | null;
   onSelectCountry: (country: string | null) => void;
+  flagSize?: number;
 }) {
   if (countries.size === 0) return null;
 
@@ -34,8 +36,8 @@ export function CountryFlags({
                   srcSet={`https://flagcdn.com/w80/${code.toLowerCase()}.png 2x`}
                   alt={code}
                   sx={{
-                    width: 20,
-                    height: 15,
+                    width: flagSize,
+                    height: Math.round(flagSize * 0.75),
                     borderRadius: "2px",
                     objectFit: "cover",
                   }}
@@ -47,6 +49,8 @@ export function CountryFlags({
               size="small"
               sx={{
                 px: 1,
+                height: flagSize + 12,
+                fontSize: flagSize * 0.6,
                 bgcolor: isSelected ? undefined : "rgba(255,255,255,0.05)",
                 borderColor: "rgba(255,255,255,0.1)",
                 fontFamily: "monospace",

@@ -119,7 +119,7 @@ export function HeatmapView({
     () => Array.from(new Set(activities.map((a) => a.sport_type))),
     [activities]
   );
-  const MAX_SPORTS = 15;
+  const MAX_SPORTS = 10;
   const displayedSports = sportTypes.slice(0, MAX_SPORTS);
   const hiddenCount = sportTypes.length - MAX_SPORTS;
 
@@ -494,7 +494,7 @@ export function HeatmapView({
         }}
       >
         <Box
-        pt={16}
+          pt={16}
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -615,18 +615,21 @@ export function HeatmapView({
 
             {visitedCountries.size > 0 && (
               <Box
-                sx={{ mb: 6, transform: "scale(2)", transformOrigin: "left" }}
+                sx={{
+                  mb: 6,
+                }}
               >
                 <CountryFlags
                   countries={visitedCountries}
                   selectedCountry={null}
                   onSelectCountry={() => {}}
+                  flagSize={42}
                 />
               </Box>
             )}
 
             <Box sx={{ mb: 4 }}>
-              <Typography variant="h4" sx={{ color: "#fff"  }}>
+              <Typography variant="h4" sx={{ color: "#fff" }}>
                 Total Distance:
               </Typography>
               <Typography
