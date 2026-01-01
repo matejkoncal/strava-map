@@ -2,8 +2,6 @@ import { useMemo, useState, useEffect } from "react";
 import {
   Alert,
   Box,
-  Card,
-  CardContent,
   Chip,
   Container,
   Stack,
@@ -13,7 +11,6 @@ import {
 } from "@mui/material";
 import {
   ErrorOutline as ErrorIcon,
-  Timeline as TimelineIcon,
   Map as MapIcon,
   List as ListIcon,
   FilterList as FilterIcon,
@@ -54,7 +51,7 @@ function App() {
     "heatmap"
   );
   const [filterType, setFilterType] = useState<string>("All");
-  const [dateRange, setDateRange] = useState<DateRange>("year");
+  const [dateRange, setDateRange] = useState<DateRange>("lastYear");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
   // Load previous year if selected
@@ -169,7 +166,7 @@ function App() {
             </Alert>
           )}
 
-          {status === "ready" && activities.length > 0 && (
+          {status === "ready" && (
             <Stack spacing={{ xs: 2, md: 3 }}>
               <Stack spacing={2}>
                 <Box sx={{ display: { xs: "none", md: "block" } }}>
@@ -285,28 +282,6 @@ function App() {
             </Stack>
           )}
 
-          {status === "ready" && activities.length === 0 && (
-            <Card
-              variant="outlined"
-              sx={{ borderStyle: "dashed", bgcolor: "transparent" }}
-            >
-              <CardContent sx={{ py: 6, textAlign: "center" }}>
-                <Stack spacing={2} alignItems="center">
-                  <Box
-                    sx={{ p: 2, borderRadius: "50%", bgcolor: "action.hover" }}
-                  >
-                    <TimelineIcon color="primary" sx={{ fontSize: 40 }} />
-                  </Box>
-                  <Typography variant="h5" fontWeight="bold">
-                    No activities yet
-                  </Typography>
-                  <Typography color="text.secondary">
-                    Go for a walk or run a test workout.
-                  </Typography>
-                </Stack>
-              </CardContent>
-            </Card>
-          )}
         </Stack>
       </Container>
       <BuyMeCoffeeFab />
