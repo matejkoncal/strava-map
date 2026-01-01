@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import {
   Download as DownloadIcon,
-  Share as ShareIcon,
   DirectionsRun as RunIcon,
   AccessTime as TimeIcon,
 } from "@mui/icons-material";
@@ -144,38 +143,38 @@ export function HeatmapView({
     }
   };
 
-  const handleShare = async () => {
-    const targetRef = storyRef.current || exportRef.current;
-    if (!targetRef) return;
+  // const handleShare = async () => {
+  //   const targetRef = storyRef.current || exportRef.current;
+  //   if (!targetRef) return;
 
-    try {
-      const canvas = await html2canvas(targetRef, {
-        backgroundColor: theme.palette.background.default,
-        scale: 2,
-        useCORS: true,
-      });
+  //   try {
+  //     const canvas = await html2canvas(targetRef, {
+  //       backgroundColor: theme.palette.background.default,
+  //       scale: 2,
+  //       useCORS: true,
+  //     });
 
-      canvas.toBlob(async (blob) => {
-        if (!blob) return;
-        const file = new File([blob], `strava-heatmap-${year}.png`, {
-          type: "image/png",
-        });
+  //     canvas.toBlob(async (blob) => {
+  //       if (!blob) return;
+  //       const file = new File([blob], `strava-heatmap-${year}.png`, {
+  //         type: "image/png",
+  //       });
 
-        if (navigator.share && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            files: [file],
-            title: `My sports year ${year}`,
-            text: `Check out my activities in ${year}!`,
-          });
-        } else {
-          // Fallback to download
-          handleExport();
-        }
-      });
-    } catch (err) {
-      console.error("Share failed", err);
-    }
-  };
+  //       if (navigator.share && navigator.canShare({ files: [file] })) {
+  //         await navigator.share({
+  //           files: [file],
+  //           title: `My sports year ${year}`,
+  //           text: `Check out my activities in ${year}!`,
+  //         });
+  //       } else {
+  //         // Fallback to download
+  //         handleExport();
+  //       }
+  //     });
+  //   } catch (err) {
+  //     console.error("Share failed", err);
+  //   }
+  // };
 
   // Group days by weeks for rendering
   const weeks: Date[][] = [];
@@ -213,14 +212,14 @@ export function HeatmapView({
   return (
     <Stack spacing={2}>
       <Stack direction="row" justifyContent="flex-end" spacing={1}>
-        <Button
+        {/* <Button
           startIcon={<ShareIcon />}
           variant="outlined"
           size="small"
           onClick={handleShare}
         >
           Share
-        </Button>
+        </Button> */}
         <Button
           startIcon={<DownloadIcon />}
           variant="outlined"
