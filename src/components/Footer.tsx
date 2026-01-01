@@ -119,7 +119,7 @@ export function Footer() {
                   <Stack spacing={1}>
                     <Box>
                       <Typography variant="body2" fontWeight="bold">
-                        Matej Končal
+                        Matej Koncal
                       </Typography>
                       <Link
                         href="mailto:matej.koncal@justdorecap.com"
@@ -137,7 +137,7 @@ export function Footer() {
                     </Box>
                     <Box>
                       <Typography variant="body2" fontWeight="bold">
-                        Martin Liščinský
+                        Martin Liscinsky
                       </Typography>
                       <Link
                         href="mailto:martin.liscinsky@justdorecap.com"
