@@ -37,23 +37,6 @@ function Metric({ label, value }: { label: string; value: string }) {
   );
 }
 
-const getActivityColor = (type?: string) => {
-  switch (type) {
-    case "Run":
-      return "#ef6c00"; // Orange
-    case "Ride":
-      return "#d32f2f"; // Red
-    case "Swim":
-      return "#0288d1"; // Blue
-    case "Walk":
-      return "#4caf50"; // Green
-    case "Hike":
-      return "#795548"; // Brown
-    default:
-      return "#757575"; // Grey
-  }
-};
-
 export function ActivityList({ activities }: { activities: Activity[] }) {
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
     null
@@ -85,11 +68,9 @@ export function ActivityList({ activities }: { activities: Activity[] }) {
               sx={{
                 cursor: "pointer",
                 transition: "transform 0.2s, box-shadow 0.2s",
-                borderRight: `6px solid ${getActivityColor(activity.sport_type)}`,
                 "&:hover": {
                   transform: "translateY(-4px)",
                   boxShadow: "0 12px 40px rgba(0,0,0,0.2)",
-                  borderColor: "primary.main",
                 },
               }}
             >
