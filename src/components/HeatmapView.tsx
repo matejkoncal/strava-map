@@ -182,6 +182,7 @@ export function HeatmapView({
             // Ignore AbortError (user cancelled share)
             if ((err as Error).name !== "AbortError") {
               console.error("Share failed", err);
+              alert((err as Error).message);
               handleExport();
             }
           }
