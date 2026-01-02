@@ -308,6 +308,7 @@ export function HeatmapView({
                     <Box
                       key={i}
                       sx={{
+                        alignItems: "center",
                         display: "grid",
                         gridTemplateColumns: "24px repeat(7, 10px)",
                         gap: "2px",
@@ -328,7 +329,7 @@ export function HeatmapView({
                               fontWeight: "bold",
                               color: "text.secondary",
                               textTransform: "uppercase",
-                              fontSize: "0.6rem",
+                              fontSize: "0.45rem",
                               fontFamily: "'Montserrat', sans-serif",
                             }}
                           >
