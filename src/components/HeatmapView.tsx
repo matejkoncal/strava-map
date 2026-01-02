@@ -142,7 +142,7 @@ export function HeatmapView({
       });
 
       const link = document.createElement("a");
-      link.download = `strava-heatmap-${year}.png`;
+      link.download = `recap-${year}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
     } catch (err) {
@@ -198,7 +198,7 @@ export function HeatmapView({
             console.error("Share failed", err);
             // Fallback to download using the ALREADY generated dataUrl
             const link = document.createElement("a");
-            link.download = `strava-heatmap-${year}.png`;
+            link.download = `recap-${year}.png`;
             link.href = dataUrl;
             link.click();
           }
@@ -206,7 +206,7 @@ export function HeatmapView({
       } else {
         // Fallback to download
         const link = document.createElement("a");
-        link.download = `strava-heatmap-${year}.png`;
+        link.download = `recap-${year}.png`;
         link.href = dataUrl;
         link.click();
       }

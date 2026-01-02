@@ -9,9 +9,7 @@ import {
 
 export function LoadingState({ status }: { status: "loading" | "exchanging" }) {
   const label =
-    status === "exchanging"
-      ? "Exchanging code for token..."
-      : "Loading activities...";
+    status === "exchanging" ? "Loading..." : "Loading activities...";
   return (
     <Card variant="outlined" sx={{ bgcolor: "rgba(255,255,255,0.02)" }}>
       <CardContent sx={{ p: 4 }}>
@@ -22,7 +20,7 @@ export function LoadingState({ status }: { status: "loading" | "exchanging" }) {
               {label}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              API calls via strava-v3, may take a moment depending on network.
+              Please wait.
             </Typography>
           </Box>
         </Stack>

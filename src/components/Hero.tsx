@@ -34,7 +34,7 @@ export function Hero({ onLoginClick }: { onLoginClick: () => void }) {
               <Typography
                 variant="h2"
                 sx={{
-                  fontSize: { xs: "2.5rem", md: "3.5rem" },
+                  fontSize: { xs: "2rem", md: "3.5rem" },
                   background: "linear-gradient(to right, #818cf8, #60a5fa)",
                   backgroundClip: "text",
                   textFillColor: "transparent",
@@ -47,7 +47,11 @@ export function Hero({ onLoginClick }: { onLoginClick: () => void }) {
               <Typography
                 variant="h6"
                 color="text.secondary"
-                sx={{ fontWeight: 400, lineHeight: 1.6 }}
+                sx={{
+                  fontWeight: 400,
+                  lineHeight: 1.6,
+                  fontSize: { xs: "1rem", md: "1.25rem" },
+                }}
               >
                 Explore your activities, generate beautiful recaps, and share
                 them with your friends. Log in to get started!
