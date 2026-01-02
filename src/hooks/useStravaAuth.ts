@@ -138,8 +138,6 @@ export function useStravaAuth() {
           document.title,
           window.location.pathname
         );
-
-        await loadActivitiesForYear(token, new Date().getFullYear());
       } catch (error) {
         console.error(error);
         setErrorMessage(
@@ -153,7 +151,6 @@ export function useStravaAuth() {
 
   useEffect(() => {
     if (accessToken) {
-      void loadActivitiesForYear(accessToken, new Date().getFullYear());
       return;
     }
 

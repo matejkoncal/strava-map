@@ -54,10 +54,16 @@ function App() {
   const [dateRange, setDateRange] = useState<DateRange>("lastYear");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
-  // Load previous year if selected
+  // Load activities based on selected date range
   useEffect(() => {
-    if (dateRange === "lastYear" && accessToken) {
-      void loadActivitiesForYear(accessToken, new Date().getFullYear() - 1);
+    if (!accessToken) return;
+
+    const currentYear = new Date().getFullYear();
+
+    if (dateRange === "lastYear") {
+      void loadActivitiesForYear(accessToken, currentYear - 1);
+    } else {
+      void loadActivitiesForYear(accessToken, currentYear);
     }
   }, [dateRange, accessToken, loadActivitiesForYear]);
 
@@ -127,7 +133,9 @@ function App() {
 
   const activityTypes = useMemo(() => {
     const types = new Set(
-      filteredActivities.map((a) => a.sport_type).filter((t): t is SportType => !!t)
+      filteredActivities
+        .map((a) => a.sport_type)
+        .filter((t): t is SportType => !!t)
     );
     return ["All", ...Array.from(types)];
   }, [filteredActivities]);
@@ -200,7 +208,11 @@ function App() {
                   {activityTypes.map((type) => (
                     <Chip
                       key={type}
-                      label={type === "All"? "All": getActivityLabel(type as SportType)}
+                      label={
+                        type === "All"
+                          ? "All"
+                          : getActivityLabel(type as SportType)
+                      }
                       onClick={() => setFilterType(type)}
                       color={filterType === type ? "primary" : "default"}
                       variant={filterType === type ? "filled" : "outlined"}
@@ -209,10 +221,7 @@ function App() {
                   ))}
                 </Stack>
 
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                >
+                <Stack direction="row" alignItems="center">
                   <ToggleButtonGroup
                     value={viewMode}
                     exclusive
@@ -281,7 +290,6 @@ function App() {
               </Box>
             </Stack>
           )}
-
         </Stack>
       </Container>
       <BuyMeCoffeeFab />
