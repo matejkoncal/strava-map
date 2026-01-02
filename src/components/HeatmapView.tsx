@@ -637,11 +637,11 @@ export function HeatmapView({
           >
             <Typography
               variant="h1"
+              color="primary"
               sx={{
                 fontWeight: 800,
                 fontSize: "9rem",
                 fontFamily: "'Montserrat', sans-serif",
-                color: "#fff",
                 lineHeight: 1,
                 mb: 4,
               }}
