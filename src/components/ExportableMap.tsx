@@ -80,8 +80,16 @@ export function ExportableMap({
     try {
       const canvas = await html2canvas(mapRef.current, {
         backgroundColor: theme.palette.background.paper,
-        scale: 4, // Higher quality for mobile exports
+        scale: 4,
         useCORS: true,
+        windowWidth: 1200,
+        onclone: (clonedDoc) => {
+          const element = clonedDoc.getElementById("export-container");
+          if (element) {
+            element.style.width = "800px";
+            element.style.maxWidth = "none";
+          }
+        },
       });
 
       const link = document.createElement("a");
@@ -99,8 +107,16 @@ export function ExportableMap({
     try {
       const canvas = await html2canvas(mapRef.current, {
         backgroundColor: theme.palette.background.paper,
-        scale: 4, // Higher quality for mobile exports
+        scale: 4,
         useCORS: true,
+        windowWidth: 1200,
+        onclone: (clonedDoc) => {
+          const element = clonedDoc.getElementById("export-container");
+          if (element) {
+            element.style.width = "800px";
+            element.style.maxWidth = "none";
+          }
+        },
       });
 
       // Convert to DataURL first (synchronous)
@@ -185,6 +201,7 @@ export function ExportableMap({
 
       <Card
         ref={mapRef}
+        id="export-container"
         sx={{
           p: 3,
           bgcolor: "background.paper",
