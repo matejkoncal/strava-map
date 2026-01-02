@@ -71,6 +71,11 @@ export function MapView({
   const mapStyles = showCountries
     ? [
         {
+          featureType: "all",
+          elementType: "labels",
+          stylers: [{ visibility: "off" }],
+        },
+        {
           featureType: "administrative.locality",
           stylers: [{ visibility: "off" }],
         },
@@ -83,19 +88,9 @@ export function MapView({
           stylers: [{ visibility: "off" }],
         },
         {
-          featureType: "road",
-          elementType: "labels",
-          stylers: [{ visibility: "off" }],
-        },
-        {
           featureType: "water",
           elementType: "geometry",
           stylers: [{ color: "#475569" }],
-        },
-        {
-          featureType: "water",
-          elementType: "labels",
-          stylers: [{ visibility: "off" }],
         },
         {
           featureType: "landscape",
