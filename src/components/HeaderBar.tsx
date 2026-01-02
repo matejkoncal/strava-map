@@ -25,13 +25,13 @@ export function HeaderBar({
             sx={{ height: { xs: 28, sm: 32, md: 40 }, width: "auto" }}
           />
           <Typography
-            variant="h5"
+            variant="h4"
             fontStyle={"italic"}
             color="text.primary"
             sx={{
               fontWeight: 700,
               letterSpacing: 0.5,
-              fontSize: { xs: "1.1rem", sm: "1.25rem", md: "1.5rem" },
+              fontSize: { xs: "1.5rem", sm: "2.125rem" },
             }}
           >
             justDo
