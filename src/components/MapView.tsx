@@ -3,12 +3,20 @@ import {
   Box,
   Button,
   Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   FormControlLabel,
+  IconButton,
   Stack,
   Switch,
   Typography,
 } from "@mui/material";
-import { OpenInNew as OpenInNewIcon } from "@mui/icons-material";
+import {
+  OpenInNew as OpenInNewIcon,
+  Close as CloseIcon,
+  Download as DownloadIcon,
+} from "@mui/icons-material";
 import { APIProvider, Map, InfoWindow } from "@vis.gl/react-google-maps";
 import type { Activity, GeoJSONCollection } from "../types";
 import { GOOGLE_MAPS_API_KEY } from "../constants";
@@ -16,6 +24,7 @@ import { formatDistance, formatDuration } from "../utils/format";
 import { CountriesLayer } from "./CountriesLayer";
 import { Markers } from "./Markers";
 import { getActivityLabel } from "../utils/getActivityLabel";
+import { ExportableMap } from "./ExportableMap";
 
 export function MapView({
   activities,
@@ -31,6 +40,7 @@ export function MapView({
   );
   const [showPins, setShowPins] = useState(true);
   const [showCountries, setShowCountries] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
 
   const activitiesWithCoords = activities.filter(
     (a) => a.start_latlng && a.start_latlng.length === 2
@@ -105,6 +115,14 @@ export function MapView({
   return (
     <Stack spacing={2}>
       <Stack direction="row" spacing={2} justifyContent="flex-end">
+        <Button
+          startIcon={<DownloadIcon />}
+          variant="outlined"
+          size="small"
+          onClick={() => setExportOpen(true)}
+        >
+          Export Map
+        </Button>
         <FormControlLabel
           control={
             <Switch
@@ -230,6 +248,33 @@ export function MapView({
           </Map>
         </APIProvider>
       </Box>
+
+      <Dialog
+        open={exportOpen}
+        onClose={() => setExportOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            Export Visited Countries
+            <IconButton onClick={() => setExportOpen(false)} size="small">
+              <CloseIcon />
+            </IconButton>
+          </Stack>
+        </DialogTitle>
+        <DialogContent>
+          <ExportableMap
+            geoJsonData={geoJsonData}
+            visitedCountries={visitedCountries}
+            onClose={() => setExportOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </Stack>
   );
 }
