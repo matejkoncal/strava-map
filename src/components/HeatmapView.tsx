@@ -13,6 +13,7 @@ import {
   Download as DownloadIcon,
   DirectionsRun as RunIcon,
   AccessTime as TimeIcon,
+  Share as ShareIcon,
 } from "@mui/icons-material";
 import {
   eachDayOfInterval,
@@ -27,7 +28,11 @@ import {
 import { enUS } from "date-fns/locale";
 import html2canvas from "html2canvas";
 import type { Activity, SportType } from "../types";
-import { formatDistance, formatDuration, formatDurationHoursOnly } from "../utils/format";
+import {
+  formatDistance,
+  formatDuration,
+  formatDurationHoursOnly,
+} from "../utils/format";
 import type { DateRange } from "./DateFilter";
 import { ActivityDetailDialog } from "./ActivityDetailDialog";
 import { CountryFlags } from "./CountryFlags";
@@ -143,38 +148,54 @@ export function HeatmapView({
     }
   };
 
-  // const handleShare = async () => {
-  //   const targetRef = storyRef.current || exportRef.current;
-  //   if (!targetRef) return;
+  const handleShare = async () => {
+    const targetRef = storyRef.current || exportRef.current;
+    if (!targetRef) return;
 
-  //   try {
-  //     const canvas = await html2canvas(targetRef, {
-  //       backgroundColor: theme.palette.background.default,
-  //       scale: 2,
-  //       useCORS: true,
-  //     });
+    try {
+      const canvas = await html2canvas(targetRef, {
+        backgroundColor: theme.palette.background.default,
+        scale: 2,
+        useCORS: true,
+      });
 
-  //     canvas.toBlob(async (blob) => {
-  //       if (!blob) return;
-  //       const file = new File([blob], `strava-heatmap-${year}.png`, {
-  //         type: "image/png",
-  //       });
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        const file = new File([blob], `strava-heatmap-${year}.png`, {
+          type: "image/png",
+        });
 
-  //       if (navigator.share && navigator.canShare({ files: [file] })) {
-  //         await navigator.share({
-  //           files: [file],
-  //           title: `My sports year ${year}`,
-  //           text: `Check out my activities in ${year}!`,
-  //         });
-  //       } else {
-  //         // Fallback to download
-  //         handleExport();
-  //       }
-  //     });
-  //   } catch (err) {
-  //     console.error("Share failed", err);
-  //   }
-  // };
+        const shareData = {
+          files: [file],
+          title: `My sports year ${year}`,
+          text: `Check out my activities in ${year}!`,
+        };
+
+        if (
+          navigator.share &&
+          navigator.canShare &&
+          navigator.canShare(shareData)
+        ) {
+          try {
+            await navigator.share(shareData);
+          } catch (err) {
+            // Ignore AbortError (user cancelled share)
+            if ((err as Error).name !== "AbortError") {
+              console.error("Share failed", err);
+              handleExport();
+            }
+          }
+        } else {
+          // Fallback to download
+          handleExport();
+        }
+      });
+    } catch (err) {
+      console.error("Share generation failed", err);
+      alert((err as Error).message);
+      handleExport();
+    }
+  };
 
   // Group days by weeks for rendering
   const weeks: Date[][] = [];
@@ -212,14 +233,14 @@ export function HeatmapView({
   return (
     <Stack spacing={2}>
       <Stack direction="row" justifyContent="flex-end" spacing={1}>
-        {/* <Button
+        <Button
           startIcon={<ShareIcon />}
           variant="outlined"
           size="small"
           onClick={handleShare}
         >
           Share
-        </Button> */}
+        </Button>
         <Button
           startIcon={<DownloadIcon />}
           variant="outlined"
