@@ -39,6 +39,7 @@ import { ActivityDetailDialog } from "./ActivityDetailDialog";
 import { CountryFlags } from "./CountryFlags";
 import { getActivityLabel } from "../utils/getActivityLabel";
 import { getActivityIcon } from "../utils/getActivityIcon";
+import logoFull from "../assets/justdorecap-logo.png";
 
 interface HeatmapViewProps {
   activities: Activity[];
@@ -1091,17 +1092,32 @@ export function HeatmapView({
           </Box>
         </Box>
         <Box sx={{ width: "100%", textAlign: "center", pb: 16 }}>
-          <Typography
-            variant="h4"
-            color="text.secondary"
-            sx={{
-              fontFamily: "'Montserrat', sans-serif",
-              fontWeight: 1000,
-              fontStyle: "italic",
-            }}
+          <Stack
+            direction="row"
+            spacing={2}
+            alignItems="center"
+            justifyContent="center"
           >
-            JustDoRecap.com
-          </Typography>
+            <Box
+              component="img"
+              src={logoFull}
+              alt="justDoRecap logo"
+              sx={{ height: 40, width: "auto" }}
+            />
+            <Typography
+              variant="h4"
+              sx={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 800,
+                fontStyle: "italic",
+                letterSpacing: 0.5,
+              }}
+            >
+              <Box component="span" color="text.secondary">
+                justDoRecap.com
+              </Box>
+            </Typography>
+          </Stack>
         </Box>
       </Box>
     </Stack>

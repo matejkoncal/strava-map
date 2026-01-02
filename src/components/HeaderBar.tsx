@@ -1,5 +1,6 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { Logout as LogoutIcon } from "@mui/icons-material";
+import logoFull from "../assets/justdorecap-logo.png";
 
 export function HeaderBar({
   onReset,
@@ -9,56 +10,51 @@ export function HeaderBar({
   isLoggedIn: boolean;
 }) {
   return (
-    <Box
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
-      mb={2}
-    >
-      <Stack direction="row" spacing={2} alignItems="center">
-        <Box
-          sx={{
-            width: 6,
-            height: 48,
-            borderRadius: 4,
-            background: "linear-gradient(to bottom, #6366f1, #8b5cf6)",
-            boxShadow: "0 4px 12px rgba(139, 92, 246, 0.5)",
-          }}
-        />
-        <Box>
+    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ width: "100%" }}
+      >
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Box
+            component="img"
+            src={logoFull}
+            alt="Just Do Recap"
+            sx={{ height: 40, width: "auto" }}
+          />
           <Typography
             variant="h4"
-            fontWeight="bold"
+            fontStyle={"italic"}
+            color="text.primary"
             sx={{
-              fontSize: { xs: "1.5rem", sm: "2.125rem" },
-              background: "linear-gradient(45deg, #818cf8, #a78bfa)",
-              backgroundClip: "text",
-              textFillColor: "transparent",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              fontStyle: "italic",
-              overflow: "visible",
+              fontWeight: 700,
+              letterSpacing: 0.5,
             }}
           >
-            Just Do Recap
+            justDo
+            <Box component="span" sx={{ color: "#7C8CFF",  }}>
+              Recap
+            </Box>
           </Typography>
-        </Box>
-      </Stack>
+        </Stack>
 
-      {isLoggedIn && (
-        <Button
-          variant="outlined"
-          color="inherit"
-          startIcon={<LogoutIcon />}
-          onClick={onReset}
-          sx={{
-            borderColor: "rgba(255,255,255,0.1)",
-            "&:hover": { borderColor: "rgba(255,255,255,0.3)" },
-          }}
-        >
-          Logout
-        </Button>
-      )}
+        {isLoggedIn && (
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<LogoutIcon />}
+            onClick={onReset}
+            sx={{
+              borderColor: "rgba(255,255,255,0.1)",
+              "&:hover": { borderColor: "rgba(255,255,255,0.3)" },
+            }}
+          >
+            Logout
+          </Button>
+        )}
+      </Stack>
     </Box>
   );
 }

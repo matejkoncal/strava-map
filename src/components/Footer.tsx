@@ -12,6 +12,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { Email, Lock, Code, Close, Info, LocalCafe } from "@mui/icons-material";
+import logoFull from "../assets/justdorecap-logo.png";
 
 export function Footer() {
   const [open, setOpen] = useState(false);
@@ -63,8 +64,8 @@ export function Footer() {
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
-        maxWidth="md"
         fullWidth
+        maxWidth="sm"
       >
         <DialogTitle
           sx={{
@@ -73,11 +74,20 @@ export function Footer() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            gap: 2,
           }}
         >
-          <Typography variant="h6" component="div">
-            About Just Do Recap
-          </Typography>
+          <Stack direction="row" alignItems="center" spacing={1.5}>
+            <Box
+              component="img"
+              src={logoFull}
+              alt="Just Do Recap"
+              sx={{ height: 32, width: "auto" }}
+            />
+            <Typography variant="h6" component="div">
+              About Just Do Recap
+            </Typography>
+          </Stack>
           <IconButton
             aria-label="close"
             onClick={() => setOpen(false)}
