@@ -82,14 +82,31 @@ export function ExportableMap({
         backgroundColor: theme.palette.background.paper,
         scale: 4,
         useCORS: true,
-        windowWidth: 800,
         onclone: (clonedDoc) => {
-          const element = clonedDoc.getElementById("export-container");
-          if (element) {
-            element.style.width = "800px";
-            element.style.maxWidth = "none";
-            element.style.height = "auto";
-            element.style.margin = "0";
+          const container = clonedDoc.getElementById("export-container");
+          if (container) {
+            // Force container size
+            container.style.width = "800px";
+            container.style.maxWidth = "none";
+            container.style.height = "auto";
+            container.style.position = "static";
+            container.style.margin = "0";
+
+            // Force SVG size to fill container
+            const svgBox = container.querySelector(".map-svg-container");
+            if (svgBox) {
+              (svgBox as HTMLElement).style.width = "800px";
+              (svgBox as HTMLElement).style.height = "500px";
+              (svgBox as HTMLElement).style.aspectRatio = "auto";
+            }
+
+            const svg = container.querySelector("svg");
+            if (svg) {
+              svg.style.width = "100%";
+              svg.style.height = "100%";
+              svg.setAttribute("width", "800");
+              svg.setAttribute("height", "500");
+            }
           }
         },
       });
@@ -111,14 +128,31 @@ export function ExportableMap({
         backgroundColor: theme.palette.background.paper,
         scale: 4,
         useCORS: true,
-        windowWidth: 800,
         onclone: (clonedDoc) => {
-          const element = clonedDoc.getElementById("export-container");
-          if (element) {
-            element.style.width = "800px";
-            element.style.maxWidth = "none";
-            element.style.height = "auto";
-            element.style.margin = "0";
+          const container = clonedDoc.getElementById("export-container");
+          if (container) {
+            // Force container size
+            container.style.width = "800px";
+            container.style.maxWidth = "none";
+            container.style.height = "auto";
+            container.style.position = "static";
+            container.style.margin = "0";
+
+            // Force SVG size to fill container
+            const svgBox = container.querySelector(".map-svg-container");
+            if (svgBox) {
+              (svgBox as HTMLElement).style.width = "800px";
+              (svgBox as HTMLElement).style.height = "500px";
+              (svgBox as HTMLElement).style.aspectRatio = "auto";
+            }
+
+            const svg = container.querySelector("svg");
+            if (svg) {
+              svg.style.width = "100%";
+              svg.style.height = "100%";
+              svg.setAttribute("width", "800");
+              svg.setAttribute("height", "500");
+            }
           }
         },
       });
@@ -231,6 +265,7 @@ export function ExportableMap({
         )}
 
         <Box
+          className="map-svg-container"
           sx={{
             width: "100%",
             maxWidth: 800,
