@@ -82,12 +82,14 @@ export function ExportableMap({
         backgroundColor: theme.palette.background.paper,
         scale: 4,
         useCORS: true,
-        windowWidth: 1200,
+        windowWidth: 800,
         onclone: (clonedDoc) => {
           const element = clonedDoc.getElementById("export-container");
           if (element) {
             element.style.width = "800px";
             element.style.maxWidth = "none";
+            element.style.height = "auto";
+            element.style.margin = "0";
           }
         },
       });
@@ -109,12 +111,14 @@ export function ExportableMap({
         backgroundColor: theme.palette.background.paper,
         scale: 4,
         useCORS: true,
-        windowWidth: 1200,
+        windowWidth: 800,
         onclone: (clonedDoc) => {
           const element = clonedDoc.getElementById("export-container");
           if (element) {
             element.style.width = "800px";
             element.style.maxWidth = "none";
+            element.style.height = "auto";
+            element.style.margin = "0";
           }
         },
       });
