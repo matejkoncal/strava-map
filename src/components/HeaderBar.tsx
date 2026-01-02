@@ -22,19 +22,20 @@ export function HeaderBar({
             component="img"
             src={logoFull}
             alt="Just Do Recap"
-            sx={{ height: 40, width: "auto" }}
+            sx={{ height: { xs: 28, sm: 32, md: 40 }, width: "auto" }}
           />
           <Typography
-            variant="h4"
+            variant="h5"
             fontStyle={"italic"}
             color="text.primary"
             sx={{
               fontWeight: 700,
               letterSpacing: 0.5,
+              fontSize: { xs: "1.1rem", sm: "1.25rem", md: "1.5rem" },
             }}
           >
             justDo
-            <Box component="span" sx={{ color: "#7C8CFF",  }}>
+            <Box component="span" sx={{ color: "#7C8CFF" }}>
               Recap
             </Box>
           </Typography>
