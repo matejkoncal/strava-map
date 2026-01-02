@@ -21,8 +21,8 @@ export function Polylines({ activities }: { activities: Activity[] }) {
           geodesic: true,
           //strokeColor: '#fc4c02', // Strava orange
           strokeColor: "#007bff", // Bootstrap primary blue
-          strokeOpacity: 0.6,
-          strokeWeight: 2,
+          strokeOpacity: 1,
+          strokeWeight: 4,
           map: map,
           clickable: false, // Make them non-clickable so they don't interfere with markers
           zIndex: 1, // Below markers
