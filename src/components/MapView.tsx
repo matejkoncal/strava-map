@@ -23,6 +23,7 @@ import { GOOGLE_MAPS_API_KEY } from "../constants";
 import { formatDistance, formatDuration } from "../utils/format";
 import { CountriesLayer } from "./CountriesLayer";
 import { Markers } from "./Markers";
+import { Polylines } from "./Polylines";
 import { getActivityLabel } from "../utils/getActivityLabel";
 import { ExportableMap } from "./ExportableMap";
 
@@ -39,6 +40,7 @@ export function MapView({
     null
   );
   const [showPins, setShowPins] = useState(true);
+  const [showRoutes, setShowRoutes] = useState(false);
   const [showCountries, setShowCountries] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
 
@@ -141,6 +143,20 @@ export function MapView({
           control={
             <Switch
               size="small"
+              checked={showRoutes}
+              onChange={(e) => setShowRoutes(e.target.checked)}
+            />
+          }
+          label={
+            <Typography variant="caption" color="text.secondary">
+              Routes
+            </Typography>
+          }
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              size="small"
               checked={showCountries}
               onChange={(e) => setShowCountries(e.target.checked)}
             />
@@ -176,6 +192,8 @@ export function MapView({
               visible={showCountries}
               geoJsonData={geoJsonData}
             />
+
+            {showRoutes && <Polylines activities={activitiesWithCoords} />}
 
             {showPins && (
               <Markers
