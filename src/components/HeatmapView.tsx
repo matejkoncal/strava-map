@@ -524,6 +524,18 @@ export function HeatmapView({
                         sx={{ fontSize: "0.7rem" }}
                       />
                     ))}
+                    {hiddenCount > 0 && (
+                      <Chip
+                        label={`+${hiddenCount} more`}
+                        color="primary"
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          fontSize: "0.7rem",
+                          opacity: 0.7,
+                        }}
+                      />
+                    )}
                   </Box>
                 </Box>
               </Box>
@@ -976,7 +988,7 @@ export function HeatmapView({
             )}
 
             <Box sx={{ mb: 4 }}>
-              <Typography variant="h4" sx={{ color: "#fff" }}>
+              <Typography variant="h4" color="text.secondary">
                 Total Distance:
               </Typography>
               <Typography
@@ -1001,7 +1013,7 @@ export function HeatmapView({
                   km
                 </span>
               </Typography>
-              <Typography variant="h4" sx={{ color: "#fff" }}>
+              <Typography variant="h4" color="text.secondary">
                 Total Time:
               </Typography>
               <Typography
@@ -1026,7 +1038,7 @@ export function HeatmapView({
                   hrs
                 </span>
               </Typography>
-              <Typography variant="h4" sx={{ color: "#fff" }}>
+              <Typography variant="h4" color="text.secondary">
                 Number of Activities:
               </Typography>
               <Typography
@@ -1043,7 +1055,7 @@ export function HeatmapView({
             </Box>
 
             <Box sx={{ mb: 6 }}>
-              <Typography variant="h4" sx={{ color: "#fff", mb: 2 }}>
+              <Typography variant="h4" color="text.secondary" sx={{ mb: 2 }}>
                 Activities:
               </Typography>
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
@@ -1079,16 +1091,15 @@ export function HeatmapView({
         </Box>
         <Box sx={{ width: "100%", textAlign: "center", pb: 16 }}>
           <Typography
-            variant="h3"
-            color="#fff"
+            variant="h4"
+            color="text.secondary"
             sx={{
               fontFamily: "'Montserrat', sans-serif",
               fontWeight: 1000,
               fontStyle: "italic",
-              opacity: 0.8,
             }}
           >
-            Just Do Recap
+            JustDoRecap.com
           </Typography>
         </Box>
       </Box>
