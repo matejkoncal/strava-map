@@ -20,12 +20,11 @@ export function ExportableMap({
   geoJsonData,
   visitedCountries,
   year,
-  onClose,
 }: ExportableMapProps) {
   const theme = useTheme();
   const mapRef = useRef<HTMLDivElement>(null);
 
-  const { paths, projection } = useMemo(() => {
+  const { paths } = useMemo(() => {
     if (!geoJsonData) return { paths: [], projection: null };
 
     // Create a projection
