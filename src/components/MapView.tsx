@@ -188,7 +188,12 @@ export function MapView({
               geoJsonData={geoJsonData}
             />
 
-            {showRoutes && <Polylines activities={activitiesWithCoords} />}
+            {showRoutes && (
+              <Polylines
+                activities={activitiesWithCoords}
+                color={showCountries ? "#007bff" : "#fc4c02"}
+              />
+            )}
 
             {showPins && (
               <Markers

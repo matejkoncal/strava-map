@@ -2,7 +2,13 @@ import { useEffect } from "react";
 import { useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
 import type { Activity } from "../types";
 
-export function Polylines({ activities }: { activities: Activity[] }) {
+export function Polylines({
+  activities,
+  color,
+}: {
+  activities: Activity[];
+  color: string;
+}) {
   const map = useMap();
   const geometryLib = useMapsLibrary("geometry");
 
@@ -19,8 +25,7 @@ export function Polylines({ activities }: { activities: Activity[] }) {
         return new google.maps.Polyline({
           path,
           geodesic: true,
-          //strokeColor: '#fc4c02', // Strava orange
-          strokeColor: "#007bff", // Bootstrap primary blue
+          strokeColor: color,
           strokeOpacity: 1,
           strokeWeight: 4,
           map: map,
@@ -32,7 +37,7 @@ export function Polylines({ activities }: { activities: Activity[] }) {
     return () => {
       polylines.forEach((polyline) => polyline.setMap(null));
     };
-  }, [map, geometryLib, activities]);
+  }, [map, geometryLib, activities, color]);
 
   return null;
 }
