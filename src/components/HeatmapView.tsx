@@ -8,6 +8,7 @@ import {
   Tooltip,
   useTheme,
   Chip,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Download as DownloadIcon,
@@ -53,6 +54,7 @@ export function HeatmapView({
   visitedCountries = new Set(),
 }: HeatmapViewProps) {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const exportRef = useRef<HTMLDivElement>(null);
   const storyRef = useRef<HTMLDivElement>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -278,226 +280,535 @@ export function HeatmapView({
         }}
       >
         <Stack spacing={{ xs: 2, sm: 4 }}>
-          {/* Header Stats */}
-          <Stack
-            direction={{ xs: "column", sm: "row" }}
-            justifyContent="space-between"
-            alignItems={{ xs: "flex-start", sm: "center" }}
-            spacing={{ xs: 2, sm: 3 }}
-          >
-            <Box>
-              <Typography variant="h4" fontWeight="bold" color="primary">
-                {year}
-              </Typography>
-              <Typography variant="subtitle2" color="text.secondary">
-                {getTitle()}
-              </Typography>
-            </Box>
-
-            <Stack
-              direction="row"
-              spacing={{ xs: 2, sm: 3 }}
-              width={{ xs: "100%", sm: "auto" }}
-              justifyContent={{ xs: "space-between", sm: "flex-start" }}
-            >
-              <Box textAlign="center">
-                <Typography variant="h6" fontWeight="bold">
-                  {formatDistance(stats.distance)}
-                </Typography>
-                <Stack
-                  direction="row"
-                  spacing={0.5}
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <RunIcon sx={{ fontSize: 14, color: "text.secondary" }} />
-                  <Typography variant="caption" color="text.secondary">
-                    Distance
-                  </Typography>
-                </Stack>
-              </Box>
-              <Box textAlign="center">
-                <Typography variant="h6" fontWeight="bold">
-                  {formatDuration(stats.time)}
-                </Typography>
-                <Stack
-                  direction="row"
-                  spacing={0.5}
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <TimeIcon sx={{ fontSize: 14, color: "text.secondary" }} />
-                  <Typography variant="caption" color="text.secondary">
-                    Time
-                  </Typography>
-                </Stack>
-              </Box>
-              <Box textAlign="center">
-                <Typography variant="h6" fontWeight="bold">
-                  {stats.count}
-                </Typography>
-                <Stack
-                  direction="row"
-                  spacing={0.5}
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Typography variant="caption" color="text.secondary">
-                    Activities
-                  </Typography>
-                </Stack>
-              </Box>
-            </Stack>
-          </Stack>
-
-          {/* Country Flags */}
-          {visitedCountries.size > 0 && (
-            <Box>
-              <CountryFlags
-                countries={visitedCountries}
-                selectedCountry={null}
-                onSelectCountry={() => {}}
-              />
-            </Box>
-          )}
-
-          {/* Heatmap Grid */}
-          <Box sx={{ overflowX: "auto" }}>
-            <Box
-              sx={{
-                display: "inline-flex",
-                flexDirection: "column",
-                gap: 1,
-                minWidth: "min-content",
-                pb: 1,
-              }}
-            >
-              {/* Month Labels */}
-              <Box sx={{ display: "flex", ml: 0 }}>
+          {isMobile ? (
+            // Mobile "Story" Layout
+            <Box sx={{ display: "flex", flexDirection: "row", gap: 4 }}>
+              {/* Left Column: Heatmap */}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "2px",
+                  pt: 6,
+                }}
+              >
                 {weeks.map((week, i) => {
-                  const firstDay = week[0];
-                  const isFirstWeekOfMonth = firstDay.getDate() <= 7;
-                  const showLabel =
+                  const firstDayOfWeek = week[0];
+                  const isFirstWeekOfMonth = firstDayOfWeek.getDate() <= 7;
+                  const showMonthLabel =
                     isFirstWeekOfMonth ||
                     (i === 0 &&
                       dateRange !== "year" &&
                       dateRange !== "lastYear");
-                  const monthLabel = showLabel
-                    ? format(firstDay, "MMM", { locale: enUS })
+                  const monthLabel = showMonthLabel
+                    ? format(firstDayOfWeek, "MMM", { locale: enUS })
                     : null;
 
                   return (
                     <Box
                       key={i}
-                      sx={{ width: 14, flexShrink: 0, position: "relative" }}
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: "24px repeat(7, 10px)",
+                        gap: "2px",
+                      }}
                     >
-                      {monthLabel && (
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            position: "absolute",
-                            bottom: 0,
-                            fontSize: "0.65rem",
-                            color: "text.secondary",
-                            fontWeight: "bold",
-                            lineHeight: 1,
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {monthLabel}
-                        </Typography>
-                      )}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                          pr: 0.5,
+                        }}
+                      >
+                        {monthLabel && (
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              fontWeight: "bold",
+                              color: "text.secondary",
+                              textTransform: "uppercase",
+                              fontSize: "0.6rem",
+                              fontFamily: "'Montserrat', sans-serif",
+                            }}
+                          >
+                            {monthLabel}
+                          </Typography>
+                        )}
+                      </Box>
+                      {week.map((day) => {
+                        const dateStr = format(day, "yyyy-MM-dd");
+                        const dayActivities = activityMap.get(dateStr) || [];
+                        const hasActivity = dayActivities.length > 0;
+                        const isFuture = day > new Date();
+                        const isCurrentYear = day.getFullYear() === year;
+                        const shouldShow =
+                          dateRange === "year" || dateRange === "lastYear"
+                            ? isCurrentYear
+                            : true;
+
+                        if (!shouldShow) return <Box key={dateStr} />;
+
+                        return (
+                          <Tooltip
+                            key={dateStr}
+                            title={
+                              hasActivity ? (
+                                <Box sx={{ textAlign: "center" }}>
+                                  <Typography variant="body2" fontWeight="bold">
+                                    {format(day, "d. MMMM yyyy", {
+                                      locale: enUS,
+                                    })}
+                                  </Typography>
+                                  <Typography variant="caption">
+                                    {dayActivities.length} activities
+                                    <br />
+                                    {formatDistance(
+                                      dayActivities.reduce(
+                                        (acc, a) => acc + (a.distance || 0),
+                                        0
+                                      )
+                                    )}
+                                  </Typography>
+                                </Box>
+                              ) : (
+                                format(day, "d. MMMM yyyy", { locale: enUS })
+                              )
+                            }
+                          >
+                            <Box
+                              sx={{
+                                width: 10,
+                                height: 10,
+                                bgcolor: hasActivity
+                                  ? getIntensityColor(dayActivities)
+                                  : "rgba(255,255,255,0.05)",
+                                borderRadius: 0.5,
+                                opacity: isFuture ? 0.3 : 1,
+                                cursor: hasActivity ? "pointer" : "default",
+                              }}
+                              onClick={() => {
+                                if (hasActivity) {
+                                  setSelectedDate(day);
+                                  setDetailOpen(true);
+                                }
+                              }}
+                            />
+                          </Tooltip>
+                        );
+                      })}
                     </Box>
                   );
                 })}
               </Box>
 
-              <Box sx={{ display: "flex", gap: "2px" }}>
-                {/* Weeks Columns */}
-                {weeks.map((week, i) => (
-                  <Box
-                    key={i}
+              {/* Right Column: Stats */}
+              <Box
+                sx={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
+                }}
+              >
+                <Typography
+                  variant="h3"
+                  fontWeight="bold"
+                  color="primary"
+                  sx={{ fontFamily: "'Montserrat', sans-serif" }}
+                >
+                  {year}
+                </Typography>
+
+                {visitedCountries.size > 0 && (
+                  <CountryFlags
+                    countries={visitedCountries}
+                    selectedCountry={null}
+                    onSelectCountry={() => {}}
+                    flagSize={16}
+                  />
+                )}
+
+                <Box>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontFamily: "'Montserrat', sans-serif" }}
+                  >
+                    Total Distance:
+                  </Typography>
+                  <Typography
+                    variant="h4"
                     sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "2px",
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      lineHeight: 1,
                     }}
                   >
-                    {week.map((day) => {
-                      const dateStr = format(day, "yyyy-MM-dd");
-                      const dayActivities = activityMap.get(dateStr) || [];
-                      const hasActivity = dayActivities.length > 0;
-                      const isFuture = day > new Date();
-                      const isCurrentYear = day.getFullYear() === year;
-                      const shouldShow =
-                        dateRange === "year" || dateRange === "lastYear"
-                          ? isCurrentYear
-                          : true;
+                    {formatDistance(stats.distance)}
+                    <span
+                      style={{
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontSize: "1rem",
+                        marginLeft: "4px",
+                      }}
+                    >
+                      km
+                    </span>
+                  </Typography>
+                </Box>
+
+                <Box>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontFamily: "'Montserrat', sans-serif" }}
+                  >
+                    Total Time:
+                  </Typography>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      lineHeight: 1,
+                    }}
+                  >
+                    {formatDurationHoursOnly(stats.time)}
+                    <span
+                      style={{
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontSize: "1rem",
+                        marginLeft: "4px",
+                      }}
+                    >
+                      hrs
+                    </span>
+                  </Typography>
+                </Box>
+
+                <Box>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontFamily: "'Montserrat', sans-serif" }}
+                  >
+                    Number of Activities:
+                  </Typography>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      lineHeight: 1,
+                    }}
+                  >
+                    {stats.count}
+                  </Typography>
+                </Box>
+
+                <Box>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontFamily: "'Montserrat', sans-serif", mb: 1 }}
+                  >
+                    Activities:
+                  </Typography>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {displayedSports.map((type) => (
+                      <Chip
+                        key={type}
+                        label={getActivityLabel(type as SportType)}
+                        size="small"
+                        variant="outlined"
+                        color="primary"
+                        icon={getActivityIcon(type as SportType)}
+                        sx={{ fontSize: "0.7rem" }}
+                      />
+                    ))}
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          ) : (
+            // Desktop Layout
+            <>
+              {/* Header Stats */}
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                justifyContent="space-between"
+                alignItems={{ xs: "flex-start", sm: "center" }}
+                spacing={{ xs: 2, sm: 3 }}
+              >
+                <Box>
+                  <Typography
+                    variant="h4"
+                    fontWeight="bold"
+                    color="primary"
+                    sx={{ fontFamily: "'Montserrat', sans-serif" }}
+                  >
+                    {year}
+                  </Typography>
+                  <Typography
+                    variant="subtitle2"
+                    color="text.secondary"
+                    sx={{ fontFamily: "'Montserrat', sans-serif" }}
+                  >
+                    {getTitle()}
+                  </Typography>
+                </Box>
+
+                <Stack
+                  direction="row"
+                  spacing={{ xs: 2, sm: 3 }}
+                  width={{ xs: "100%", sm: "auto" }}
+                  justifyContent={{ xs: "space-between", sm: "flex-start" }}
+                >
+                  <Box textAlign="center">
+                    <Typography
+                      variant="h6"
+                      fontWeight="bold"
+                      sx={{
+                        fontFamily: "'Bebas Neue', sans-serif",
+                        fontSize: "1.5rem",
+                      }}
+                    >
+                      {formatDistance(stats.distance)}
+                    </Typography>
+                    <Stack
+                      direction="row"
+                      spacing={0.5}
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <RunIcon sx={{ fontSize: 14, color: "text.secondary" }} />
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ fontFamily: "'Montserrat', sans-serif" }}
+                      >
+                        Distance
+                      </Typography>
+                    </Stack>
+                  </Box>
+                  <Box textAlign="center">
+                    <Typography
+                      variant="h6"
+                      fontWeight="bold"
+                      sx={{
+                        fontFamily: "'Bebas Neue', sans-serif",
+                        fontSize: "1.5rem",
+                      }}
+                    >
+                      {formatDuration(stats.time)}
+                    </Typography>
+                    <Stack
+                      direction="row"
+                      spacing={0.5}
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <TimeIcon
+                        sx={{ fontSize: 14, color: "text.secondary" }}
+                      />
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ fontFamily: "'Montserrat', sans-serif" }}
+                      >
+                        Time
+                      </Typography>
+                    </Stack>
+                  </Box>
+                  <Box textAlign="center">
+                    <Typography
+                      variant="h6"
+                      fontWeight="bold"
+                      sx={{
+                        fontFamily: "'Bebas Neue', sans-serif",
+                        fontSize: "1.5rem",
+                      }}
+                    >
+                      {stats.count}
+                    </Typography>
+                    <Stack
+                      direction="row"
+                      spacing={0.5}
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ fontFamily: "'Montserrat', sans-serif" }}
+                      >
+                        Activities
+                      </Typography>
+                    </Stack>
+                  </Box>
+                </Stack>
+              </Stack>
+
+              {/* Country Flags */}
+              {visitedCountries.size > 0 && (
+                <Box>
+                  <CountryFlags
+                    countries={visitedCountries}
+                    selectedCountry={null}
+                    onSelectCountry={() => {}}
+                  />
+                </Box>
+              )}
+
+              {/* Heatmap Grid */}
+              <Box sx={{ overflowX: "auto" }}>
+                <Box
+                  sx={{
+                    display: "inline-flex",
+                    flexDirection: "column",
+                    gap: 1,
+                    minWidth: "min-content",
+                    pb: 1,
+                  }}
+                >
+                  {/* Month Labels */}
+                  <Box sx={{ display: "flex", ml: 0 }}>
+                    {weeks.map((week, i) => {
+                      const firstDay = week[0];
+                      const isFirstWeekOfMonth = firstDay.getDate() <= 7;
+                      const showLabel =
+                        isFirstWeekOfMonth ||
+                        (i === 0 &&
+                          dateRange !== "year" &&
+                          dateRange !== "lastYear");
+                      const monthLabel = showLabel
+                        ? format(firstDay, "MMM", { locale: enUS })
+                        : null;
 
                       return (
-                        <Tooltip
-                          key={dateStr}
-                          title={
-                            hasActivity ? (
-                              <Box sx={{ textAlign: "center" }}>
-                                <Typography variant="body2" fontWeight="bold">
-                                  {format(day, "d. MMMM yyyy", {
-                                    locale: enUS,
-                                  })}
-                                </Typography>
-                                <Typography variant="caption">
-                                  {dayActivities.length} activities
-                                  <br />
-                                  {formatDistance(
-                                    dayActivities.reduce(
-                                      (acc, a) => acc + (a.distance || 0),
-                                      0
-                                    )
-                                  )}
-                                </Typography>
-                              </Box>
-                            ) : (
-                              format(day, "d. MMMM yyyy", { locale: enUS })
-                            )
-                          }
+                        <Box
+                          key={i}
+                          sx={{
+                            width: 14,
+                            flexShrink: 0,
+                            position: "relative",
+                          }}
                         >
-                          <Box
-                            sx={{
-                              width: 12,
-                              height: 12,
-                              bgcolor: shouldShow
-                                ? hasActivity
-                                  ? getIntensityColor(dayActivities)
-                                  : "rgba(255,255,255,0.05)"
-                                : "transparent",
-                              borderRadius: 0.5,
-                              cursor:
-                                shouldShow && hasActivity
-                                  ? "pointer"
-                                  : "default",
-                              opacity: isFuture ? 0.3 : 1,
-                              transition: "all 0.2s",
-                              "&:hover": {
-                                transform: shouldShow ? "scale(1.2)" : "none",
-                                zIndex: 1,
-                                border: shouldShow ? "1px solid white" : "none",
-                              },
-                            }}
-                            onClick={() => {
-                              if (shouldShow && hasActivity) {
-                                setSelectedDate(day);
-                                setDetailOpen(true);
-                              }
-                            }}
-                          />
-                        </Tooltip>
+                          {monthLabel && (
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                position: "absolute",
+                                bottom: 0,
+                                fontSize: "0.65rem",
+                                color: "text.secondary",
+                                fontWeight: "bold",
+                                lineHeight: 1,
+                                whiteSpace: "nowrap",
+                                fontFamily: "'Montserrat', sans-serif",
+                              }}
+                            >
+                              {monthLabel}
+                            </Typography>
+                          )}
+                        </Box>
                       );
                     })}
                   </Box>
-                ))}
+
+                  <Box sx={{ display: "flex", gap: "2px" }}>
+                    {/* Weeks Columns */}
+                    {weeks.map((week, i) => (
+                      <Box
+                        key={i}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "2px",
+                        }}
+                      >
+                        {week.map((day) => {
+                          const dateStr = format(day, "yyyy-MM-dd");
+                          const dayActivities = activityMap.get(dateStr) || [];
+                          const hasActivity = dayActivities.length > 0;
+                          const isFuture = day > new Date();
+                          const isCurrentYear = day.getFullYear() === year;
+                          const shouldShow =
+                            dateRange === "year" || dateRange === "lastYear"
+                              ? isCurrentYear
+                              : true;
+
+                          return (
+                            <Tooltip
+                              key={dateStr}
+                              title={
+                                hasActivity ? (
+                                  <Box sx={{ textAlign: "center" }}>
+                                    <Typography
+                                      variant="body2"
+                                      fontWeight="bold"
+                                    >
+                                      {format(day, "d. MMMM yyyy", {
+                                        locale: enUS,
+                                      })}
+                                    </Typography>
+                                    <Typography variant="caption">
+                                      {dayActivities.length} activities
+                                      <br />
+                                      {formatDistance(
+                                        dayActivities.reduce(
+                                          (acc, a) => acc + (a.distance || 0),
+                                          0
+                                        )
+                                      )}
+                                    </Typography>
+                                  </Box>
+                                ) : (
+                                  format(day, "d. MMMM yyyy", { locale: enUS })
+                                )
+                              }
+                            >
+                              <Box
+                                sx={{
+                                  width: 12,
+                                  height: 12,
+                                  bgcolor: shouldShow
+                                    ? hasActivity
+                                      ? getIntensityColor(dayActivities)
+                                      : "rgba(255,255,255,0.05)"
+                                    : "transparent",
+                                  borderRadius: 0.5,
+                                  cursor:
+                                    shouldShow && hasActivity
+                                      ? "pointer"
+                                      : "default",
+                                  opacity: isFuture ? 0.3 : 1,
+                                  transition: "all 0.2s",
+                                  "&:hover": {
+                                    transform: shouldShow
+                                      ? "scale(1.2)"
+                                      : "none",
+                                    zIndex: 1,
+                                    border: shouldShow
+                                      ? "1px solid white"
+                                      : "none",
+                                  },
+                                }}
+                                onClick={() => {
+                                  if (shouldShow && hasActivity) {
+                                    setSelectedDate(day);
+                                    setDetailOpen(true);
+                                  }
+                                }}
+                              />
+                            </Tooltip>
+                          );
+                        })}
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
               </Box>
-            </Box>
-          </Box>
+            </>
+          )}
         </Stack>
       </Card>
 
