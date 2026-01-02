@@ -37,6 +37,15 @@ export function useStravaAuth() {
     []
   );
 
+  const handleReset = useCallback(() => {
+    localStorage.removeItem(STORAGE_KEY);
+    setAccessToken(null);
+    setActivities([]);
+    loadedYears.current.clear();
+    setStatus("idle");
+    setErrorMessage(null);
+  }, []);
+
   const loadActivitiesForYear = useCallback(
     async (token: string, year: number) => {
       if (loadedYears.current.has(year)) {
@@ -99,55 +108,45 @@ export function useStravaAuth() {
         setStatus("ready");
       } catch (error) {
         console.error(error);
-        setErrorMessage(
-          "Failed to load activities. Check CORS and access credentials."
-        );
-        setStatus("error");
+        handleReset();
       }
     },
-    []
+    [handleReset]
   );
 
-  const exchangeCodeForToken = useCallback(
-    async (code: string) => {
-      try {
-        setStatus("exchanging");
-        setErrorMessage(null);
+  const exchangeCodeForToken = useCallback(async (code: string) => {
+    try {
+      setStatus("exchanging");
+      setErrorMessage(null);
 
-        const exchangeStravaToken = httpsCallable(
-          functions,
-          "exchangeStravaToken"
-        );
-        const result = await exchangeStravaToken({ code });
+      const exchangeStravaToken = httpsCallable(
+        functions,
+        "exchangeStravaToken"
+      );
+      const result = await exchangeStravaToken({ code });
 
-        // Data from backend is in .data property
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const stravaData = result.data as any;
-        console.log("Access Token:", stravaData.access_token);
+      // Data from backend is in .data property
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const stravaData = result.data as any;
+      console.log("Access Token:", stravaData.access_token);
 
-        const token = stravaData.access_token as string | undefined;
+      const token = stravaData.access_token as string | undefined;
 
-        if (!token) {
-          throw new Error("Missing access token in response");
-        }
-
-        setAccessToken(token);
-        localStorage.setItem(STORAGE_KEY, token);
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname
-        );
-      } catch (error) {
-        console.error(error);
-        setErrorMessage(
-          "Failed to obtain access token. Check Firebase function logs."
-        );
-        setStatus("error");
+      if (!token) {
+        throw new Error("Missing access token in response");
       }
-    },
-    [loadActivitiesForYear]
-  );
+
+      setAccessToken(token);
+      localStorage.setItem(STORAGE_KEY, token);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(
+        "Failed to obtain access token. Check Firebase function logs."
+      );
+      setStatus("error");
+    }
+  }, []);
 
   useEffect(() => {
     if (accessToken) {
@@ -162,15 +161,6 @@ export function useStravaAuth() {
       void exchangeCodeForToken(code);
     }
   }, [accessToken, loadActivitiesForYear, exchangeCodeForToken]);
-
-  const handleReset = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    setAccessToken(null);
-    setActivities([]);
-    loadedYears.current.clear();
-    setStatus("idle");
-    setErrorMessage(null);
-  };
 
   return {
     accessToken,
