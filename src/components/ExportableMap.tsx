@@ -80,7 +80,7 @@ export function ExportableMap({
     try {
       const canvas = await html2canvas(mapRef.current, {
         backgroundColor: theme.palette.background.paper,
-        scale: 2,
+        scale: 4, // Higher quality for mobile exports
         useCORS: true,
       });
 
@@ -99,7 +99,7 @@ export function ExportableMap({
     try {
       const canvas = await html2canvas(mapRef.current, {
         backgroundColor: theme.palette.background.paper,
-        scale: 2,
+        scale: 4, // Higher quality for mobile exports
         useCORS: true,
       });
 
