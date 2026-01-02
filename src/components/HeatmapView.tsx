@@ -159,42 +159,57 @@ export function HeatmapView({
         useCORS: true,
       });
 
-      canvas.toBlob(async (blob) => {
-        if (!blob) return;
-        const file = new File([blob], `strava-heatmap-${year}.png`, {
-          type: "image/png",
-        });
+      // Convert to DataURL first (synchronous)
+      const dataUrl = canvas.toDataURL("image/png");
 
-        const shareData = {
-          files: [file],
-          title: `My sports year ${year}`,
-          text: `Check out my activities in ${year}!`,
-        };
+      // Convert DataURL to Blob synchronously to avoid async toBlob callback
+      // which might cause "user activation" to expire on iOS
+      const byteString = atob(dataUrl.split(",")[1]);
+      const mimeString = dataUrl.split(",")[0].split(":")[1].split(";")[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([ab], { type: mimeString });
 
-        if (
-          navigator.share &&
-          navigator.canShare &&
-          navigator.canShare(shareData)
-        ) {
-          try {
-            await navigator.share(shareData);
-          } catch (err) {
-            // Ignore AbortError (user cancelled share)
-            if ((err as Error).name !== "AbortError") {
-              console.error("Share failed", err);
-              alert((err as Error).message);
-              handleExport();
-            }
-          }
-        } else {
-          // Fallback to download
-          handleExport();
-        }
+      const file = new File([blob], `strava-heatmap-${year}.png`, {
+        type: "image/png",
       });
+
+      const shareData = {
+        files: [file],
+        title: `My sports year ${year}`,
+        text: `Check out my activities in ${year}!`,
+      };
+
+      if (
+        navigator.share &&
+        navigator.canShare &&
+        navigator.canShare(shareData)
+      ) {
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          // Ignore AbortError (user cancelled share)
+          if ((err as Error).name !== "AbortError") {
+            console.error("Share failed", err);
+            // Fallback to download using the ALREADY generated dataUrl
+            const link = document.createElement("a");
+            link.download = `strava-heatmap-${year}.png`;
+            link.href = dataUrl;
+            link.click();
+          }
+        }
+      } else {
+        // Fallback to download
+        const link = document.createElement("a");
+        link.download = `strava-heatmap-${year}.png`;
+        link.href = dataUrl;
+        link.click();
+      }
     } catch (err) {
       console.error("Share generation failed", err);
-      alert((err as Error).message);
-      handleExport();
     }
   };
 
