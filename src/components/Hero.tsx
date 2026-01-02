@@ -42,7 +42,7 @@ export function Hero({ onLoginClick }: { onLoginClick: () => void }) {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                Your Personal Activity Recap
+                Personal Activity Recap
               </Typography>
               <Typography
                 variant="h6"
