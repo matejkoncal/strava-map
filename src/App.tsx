@@ -9,6 +9,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Button,
+  Snackbar,
 } from "@mui/material";
 import {
   ErrorOutline as ErrorIcon,
@@ -56,6 +57,7 @@ function App() {
   const [dateRange, setDateRange] = useState<DateRange>("lastYear");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [inApp] = useState(() => isInAppBrowser());
+  const [copyOpen, setCopyOpen] = useState(false);
 
   // Load activities based on selected date range
   useEffect(() => {
@@ -162,45 +164,64 @@ function App() {
           <HeaderBar onReset={handleReset} isLoggedIn={isLoggedIn} />
 
           {inApp ? (
-            <Alert severity="info" variant="outlined">
-              <Typography variant="h6" gutterBottom>
-                Open this page in your browser
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                It looks like you opened this page inside an in-app browser
-                (Instagram, Facebook or Messenger). Because of the
-                limitations of these browsers, some features may not work correctly.
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                Please open this page in your default browser (Chrome, Safari,
-                etc.).
-              </Typography>
-              <Box mt={1}>
-                <Typography
-                  variant="body2"
-                  sx={{ wordBreak: "break-all", fontFamily: "monospace" }}
-                >
-                  {typeof window !== "undefined" ? window.location.href : ""}
+            <>
+              <Alert severity="info" variant="outlined">
+                <Typography variant="h6" gutterBottom>
+                  Open this page in your browser
                 </Typography>
-              </Box>
-              <Box mt={2}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    if (typeof window !== "undefined") {
-                      window.open(window.location.href, "_blank");
-                    }
-                  }}
-                >
-                  Open in browser
-                </Button>
-              </Box>
-              <Typography variant="body2" mt={2}>
-                If the button does not work, please visit justDoRecap.com from
-                the browser which you normally use.
-              </Typography>
-            </Alert>
+                <Typography variant="body2" gutterBottom>
+                  It looks like you opened this page inside an in-app browser
+                  (Instagram, Facebook or Messenger). Because of the
+                  limitations of these browsers, some features may not work
+                  correctly.
+                </Typography>
+                <Typography variant="body2" gutterBottom>
+                  Please open this page in your normal browser (Chrome, Safari,
+                  etc.). You can copy the link below and paste it into your
+                  browser:
+                </Typography>
+                <Box mt={1}>
+                  <Typography
+                    variant="body2"
+                    sx={{ wordBreak: "break-all", fontFamily: "monospace" }}
+                  >
+                    {typeof window !== "undefined" ? window.location.href : ""}
+                  </Typography>
+                </Box>
+                <Box mt={2}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={async () => {
+                      if (typeof window === "undefined") return;
+                      const url = window.location.href;
+                      try {
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                          await navigator.clipboard.writeText(url);
+                        }
+                        setCopyOpen(true);
+                      } catch {
+                        // ignore errors; user can still copy manually
+                      }
+                    }}
+                  >
+                    Copy link
+                  </Button>
+                </Box>
+                <Typography variant="body2" mt={2}>
+                  If copying does not work, please manually type justDoRecap.com
+                  into the browser which you normally use and open the site
+                  from there.
+                </Typography>
+              </Alert>
+
+              <Snackbar
+                open={copyOpen}
+                autoHideDuration={3000}
+                onClose={() => setCopyOpen(false)}
+                message="Link copied to clipboard"
+              />
+            </>
           ) : (
             <>
               {!isLoggedIn && (
