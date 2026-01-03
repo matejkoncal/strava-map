@@ -59,6 +59,8 @@ function App() {
   const [inApp] = useState(() => isInAppBrowser());
   const [copyOpen, setCopyOpen] = useState(false);
 
+  const APP_URL = "https://justdorecap.com";
+
   // Load activities based on selected date range
   useEffect(() => {
     if (!accessToken) return;
@@ -183,7 +185,7 @@ function App() {
                     variant="body2"
                     sx={{ wordBreak: "break-all", fontFamily: "monospace" }}
                   >
-                    {typeof window !== "undefined" ? window.location.href : ""}
+                    {APP_URL}
                   </Typography>
                 </Box>
                 <Box mt={2}>
@@ -191,11 +193,9 @@ function App() {
                     variant="contained"
                     color="primary"
                     onClick={async () => {
-                      if (typeof window === "undefined") return;
-                      const url = window.location.href;
                       try {
                         if (navigator.clipboard && navigator.clipboard.writeText) {
-                          await navigator.clipboard.writeText(url);
+                          await navigator.clipboard.writeText(APP_URL);
                         }
                         setCopyOpen(true);
                       } catch {
