@@ -170,10 +170,8 @@ function App() {
                   Open this page in your browser
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  It looks like you opened this page inside an in-app browser
-                  (Instagram, Facebook or Messenger). Because of the
-                  limitations of these browsers, some features may not work
-                  correctly.
+                  It looks like you opened this page inside an app
+                  (Instagram, Facebook or Messenger).
                 </Typography>
                 <Typography variant="body2" gutterBottom>
                   Please open this page in your normal browser (Chrome, Safari,
