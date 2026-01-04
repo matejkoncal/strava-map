@@ -290,7 +290,7 @@ export function HeatmapView({
                   display: "flex",
                   flexDirection: "column",
                   gap: "2px",
-                  pt: 6,
+                  pt: 1,
                 }}
               >
                 {weeks.map((week, i) => {
