@@ -8,6 +8,7 @@ export function isInAppBrowser() {
   const isFacebook = ua.includes("FBAN") || ua.includes("FBAV");
   const isMessenger = ua.includes("Messenger");
   const isLine = lower.includes(" line/");
+  const isLinkedIn = ua.includes("LinkedIn") || lower.includes("linkedin");
 
-  return isInstagram || isFacebook || isMessenger || isLine;
+  return isInstagram || isFacebook || isMessenger || isLine || isLinkedIn;
 }
