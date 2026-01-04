@@ -11,7 +11,9 @@ export function CountryFlags({
   onSelectCountry: (country: string | null) => void;
   flagSize?: number;
 }) {
-  if (countries.size === 0) return null;
+  const allCountries = Array.from(countries);
+
+  if (allCountries.length === 0) return null;
 
   return (
     <Stack
@@ -21,27 +23,32 @@ export function CountryFlags({
       useFlexGap
       sx={{ py: 1 }}
     >
-      {Array.from(countries)
+      {allCountries
         .sort()
         .map((code) => {
+          const trimmed = (code ?? "").trim();
+          const isValidIso = /^[A-Z]{2,3}$/i.test(trimmed);
+          const label = isValidIso ? trimmed : "Unknown";
           const isSelected = selectedCountry === code;
           return (
             <Chip
               key={code}
-              label={code}
+              label={label}
               icon={
-                <Box
-                  component="img"
-                  src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
-                  srcSet={`https://flagcdn.com/w80/${code.toLowerCase()}.png 2x`}
-                  alt={code}
-                  sx={{
-                    width: flagSize,
-                    height: Math.round(flagSize * 0.75),
-                    borderRadius: "2px",
-                    objectFit: "cover",
-                  }}
-                />
+                isValidIso ? (
+                  <Box
+                    component="img"
+                    src={`https://flagcdn.com/w40/${trimmed.toLowerCase()}.png`}
+                    srcSet={`https://flagcdn.com/w80/${trimmed.toLowerCase()}.png 2x`}
+                    alt={trimmed}
+                    sx={{
+                      width: flagSize,
+                      height: Math.round(flagSize * 0.75),
+                      borderRadius: "2px",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : undefined
               }
               variant={isSelected ? "filled" : "outlined"}
               color={isSelected ? "primary" : "default"}
