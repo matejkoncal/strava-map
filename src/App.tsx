@@ -176,7 +176,7 @@ function App() {
                   (Instagram, Facebook or Messenger).
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  Please open this page in your normal browser (Chrome, Safari,
+                  Please, open it in your normal browser (Chrome, Safari,
                   etc.). You can copy the link below and paste it into your
                   browser:
                 </Typography>
@@ -206,11 +206,6 @@ function App() {
                     Copy link
                   </Button>
                 </Box>
-                <Typography variant="body2" mt={2}>
-                  If copying does not work, please manually type justDoRecap.com
-                  into the browser which you normally use and open the site
-                  from there.
-                </Typography>
               </Alert>
 
               <Snackbar
