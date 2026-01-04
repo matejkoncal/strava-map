@@ -443,6 +443,7 @@ export function HeatmapView({
                     variant="h4"
                     sx={{
                       fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: "4rem",
                       lineHeight: 1,
                     }}
                   >
@@ -472,6 +473,7 @@ export function HeatmapView({
                     sx={{
                       fontFamily: "'Bebas Neue', sans-serif",
                       lineHeight: 1,
+                      fontSize: "4rem",
                     }}
                   >
                     {formatDurationHoursOnly(stats.time)}
@@ -500,6 +502,7 @@ export function HeatmapView({
                     sx={{
                       fontFamily: "'Bebas Neue', sans-serif",
                       lineHeight: 1,
+                      fontSize: "4rem",
                     }}
                   >
                     {stats.count}
