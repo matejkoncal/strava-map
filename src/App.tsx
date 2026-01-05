@@ -172,13 +172,12 @@ function App() {
                   Open this page in your browser
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  It looks like you opened this page inside an app
+                  It looks like you opened it inside an app
                   (Instagram, Facebook or Messenger).
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  Please, open it in your normal browser (Chrome, Safari,
-                  etc.). You can copy the link below and paste it into your
-                  browser:
+                  Please, open it in your browser (Chrome, Safari,
+                  etc.). You can copy the link below.
                 </Typography>
                 <Box mt={1}>
                   <Typography
