@@ -12,8 +12,6 @@ import {
 } from "@mui/material";
 import {
   Download as DownloadIcon,
-  DirectionsRun as RunIcon,
-  AccessTime as TimeIcon,
   Share as ShareIcon,
 } from "@mui/icons-material";
 import {
@@ -31,7 +29,6 @@ import html2canvas from "html2canvas";
 import type { Activity, SportType } from "../types";
 import {
   formatDistance,
-  formatDuration,
   formatDurationHoursOnly,
 } from "../utils/format";
 import type { DateRange } from "./DateFilter";
