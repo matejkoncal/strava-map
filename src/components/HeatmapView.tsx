@@ -560,6 +560,7 @@ export function HeatmapView({
                     variant="h4"
                     fontWeight="bold"
                     color="primary"
+                    fontSize={"2.5rem"}
                     sx={{ fontFamily: "'Montserrat', sans-serif" }}
                   >
                     {year}
@@ -581,14 +582,25 @@ export function HeatmapView({
                 >
                   <Box textAlign="center">
                     <Typography
-                      variant="h6"
+                      variant="h4"
                       fontWeight="bold"
                       sx={{
                         fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: "1.5rem",
+                        fontSize: "2.5rem",
                       }}
                     >
                       {formatDistance(stats.distance)}
+                      <span
+                        style={{
+                          fontFamily: "'Montserrat'",
+                          fontSize: "1rem",
+                          fontWeight: "normal",
+                          color: "#fff",
+                          marginLeft: "0.3em",
+                        }}
+                      >
+                        km
+                      </span>
                     </Typography>
                     <Stack
                       direction="row"
@@ -596,7 +608,6 @@ export function HeatmapView({
                       alignItems="center"
                       justifyContent="center"
                     >
-                      <RunIcon sx={{ fontSize: 14, color: "text.secondary" }} />
                       <Typography
                         variant="caption"
                         color="text.secondary"
@@ -608,14 +619,25 @@ export function HeatmapView({
                   </Box>
                   <Box textAlign="center">
                     <Typography
-                      variant="h6"
+                      variant="h4"
                       fontWeight="bold"
                       sx={{
                         fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: "1.5rem",
+                        fontSize: "2.5rem",
                       }}
                     >
-                      {formatDuration(stats.time)}
+                      {formatDurationHoursOnly(stats.time)}
+                      <span
+                        style={{
+                          fontFamily: "'Montserrat'",
+                          fontSize: "1rem",
+                          fontWeight: "normal",
+                          color: "#fff",
+                          marginLeft: "0.3em",
+                        }}
+                      >
+                        hrs
+                      </span>
                     </Typography>
                     <Stack
                       direction="row"
@@ -623,9 +645,6 @@ export function HeatmapView({
                       alignItems="center"
                       justifyContent="center"
                     >
-                      <TimeIcon
-                        sx={{ fontSize: 14, color: "text.secondary" }}
-                      />
                       <Typography
                         variant="caption"
                         color="text.secondary"
@@ -637,11 +656,11 @@ export function HeatmapView({
                   </Box>
                   <Box textAlign="center">
                     <Typography
-                      variant="h6"
+                      variant="h4"
                       fontWeight="bold"
                       sx={{
                         fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: "1.5rem",
+                        fontSize: "2.5rem",
                       }}
                     >
                       {stats.count}
