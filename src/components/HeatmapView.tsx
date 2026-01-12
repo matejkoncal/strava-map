@@ -503,7 +503,7 @@ export function HeatmapView({
             flex: 1,
             display: "flex",
             flexDirection: "column",
-            gap: 1,
+            gap: { xs: 0.75, sm: 1 },
           }}
         >
           <Typography
@@ -535,13 +535,13 @@ export function HeatmapView({
                 color: isStory ? activeStoryTheme.mutedText : undefined,
               }}
             >
-              Total Distance:
+              Distance:
             </Typography>
             <Typography
               variant="h4"
               sx={{
                 fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: "4rem",
+                fontSize: { xs: "3.2rem", sm: "4rem" },
                 lineHeight: 1,
                 color: isStory ? storyValueColor : undefined,
               }}
@@ -567,14 +567,14 @@ export function HeatmapView({
                 color: isStory ? activeStoryTheme.mutedText : undefined,
               }}
             >
-              Total Time:
+              Time:
             </Typography>
             <Typography
               variant="h4"
               sx={{
                 fontFamily: "'Bebas Neue', sans-serif",
                 lineHeight: 1,
-                fontSize: "4rem",
+                fontSize: { xs: "3.2rem", sm: "4rem" },
                 color: isStory ? storyValueColor : undefined,
               }}
             >
@@ -599,14 +599,14 @@ export function HeatmapView({
                 color: isStory ? activeStoryTheme.mutedText : undefined,
               }}
             >
-              Number of Activities:
+              Activities:
             </Typography>
             <Typography
               variant="h4"
               sx={{
                 fontFamily: "'Bebas Neue', sans-serif",
                 lineHeight: 1,
-                fontSize: "4rem",
+                fontSize: { xs: "3.2rem", sm: "4rem" },
                 color: isStory ? storyValueColor : undefined,
               }}
             >
@@ -623,7 +623,7 @@ export function HeatmapView({
                 color: isStory ? activeStoryTheme.mutedText : undefined,
               }}
             >
-              Activities:
+              Sports:
             </Typography>
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {displayedSports.map((type) => (
@@ -635,12 +635,19 @@ export function HeatmapView({
                   color={viewMode === "story" ? activeStoryTheme.chipColor : "primary"}
                   icon={getActivityIcon(type as SportType)}
                   sx={{
-                    fontSize: "0.7rem",
+                    fontSize: "0.66rem",
+                    height: 22,
+                    "& .MuiChip-label": {
+                      px: 0.5,
+                    },
                     borderColor:
                       viewMode === "story" ? activeStoryTheme.mutedText : undefined,
                     color: viewMode === "story" ? activeStoryTheme.text : undefined,
                     "& .MuiChip-icon": {
                       color: viewMode === "story" ? activeStoryTheme.text : undefined,
+                      fontSize: "1rem",
+                      ml: 0.35,
+                      mr: -0.1,
                     },
                   }}
                 />
@@ -652,7 +659,11 @@ export function HeatmapView({
                   variant="outlined"
                   size="small"
                   sx={{
-                    fontSize: "0.7rem",
+                    fontSize: "0.66rem",
+                    height: 22,
+                    "& .MuiChip-label": {
+                      px: 0.5,
+                    },
                     opacity: 0.85,
                     borderColor:
                       viewMode === "story" ? activeStoryTheme.mutedText : undefined,
@@ -955,12 +966,13 @@ export function HeatmapView({
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   backgroundRepeat: "no-repeat",
-                  p: 4,
+                  p: { xs: 2.5, sm: 4 },
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
                   fontFamily: "'Montserrat', sans-serif",
                   position: "relative",
+                  overflow: "hidden",
                 }}
               >
                 {/* Darken uploaded image background for readability */}
@@ -979,7 +991,7 @@ export function HeatmapView({
                 {/* ...existing story content... */}
 
                 <Box
-                  pt={4}
+                  pt={{ xs: 2, sm: 4 }}
                   sx={{
                     display: "flex",
                     flexDirection: "row",
@@ -987,7 +999,7 @@ export function HeatmapView({
                     width: "100%",
                     alignItems: "flex-start",
                     justifyContent: "center",
-                    gap: 4,
+                    gap: { xs: 2, sm: 4 },
                     position: "relative",
                     zIndex: 1,
                   }}
@@ -1026,7 +1038,7 @@ export function HeatmapView({
                             key={i}
                             sx={{
                               display: "grid",
-                              gridTemplateColumns: "18px repeat(7, 9px)",
+                              gridTemplateColumns: "16px repeat(7, 8px)",
                               gap: "1px",
                             }}
                           >
@@ -1060,7 +1072,7 @@ export function HeatmapView({
                                 <HeatmapCell
                                   key={format(day, "yyyy-MM-dd")}
                                   day={day}
-                                  size={9}
+                                  size={8}
                                   emptyColor={activeStoryTheme.emptyCell}
                                   show={shouldShow}
                                   enableHover={false}
@@ -1090,7 +1102,7 @@ export function HeatmapView({
                   sx={{
                     width: "100%",
                     textAlign: "center",
-                    pb: 4,
+                    pb: { xs: 2, sm: 4 },
                     position: "relative",
                     zIndex: 1,
                   }}
