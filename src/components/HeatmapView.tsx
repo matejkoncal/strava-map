@@ -1054,7 +1054,7 @@ export function HeatmapView({
                                 <MonthLabel
                                   label={monthLabel}
                                   sx={{
-                                    fontSize: "0.35rem",
+                                    fontSize: "0.3rem",
                                     color: activeStoryTheme.mutedText,
                                   }}
                                 />
