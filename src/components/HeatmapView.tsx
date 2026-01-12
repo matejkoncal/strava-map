@@ -637,8 +637,13 @@ export function HeatmapView({
                   sx={{
                     fontSize: "0.66rem",
                     height: 22,
+                    maxWidth: "none",
                     "& .MuiChip-label": {
                       px: 0.5,
+                      overflow: "visible",
+                      textOverflow: "clip",
+                      whiteSpace: "nowrap",
+                      maxWidth: "none",
                     },
                     borderColor:
                       viewMode === "story" ? activeStoryTheme.mutedText : undefined,
@@ -661,8 +666,13 @@ export function HeatmapView({
                   sx={{
                     fontSize: "0.66rem",
                     height: 22,
+                    maxWidth: "none",
                     "& .MuiChip-label": {
                       px: 0.5,
+                      overflow: "visible",
+                      textOverflow: "clip",
+                      whiteSpace: "nowrap",
+                      maxWidth: "none",
                     },
                     opacity: 0.85,
                     borderColor:
