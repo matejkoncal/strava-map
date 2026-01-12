@@ -85,13 +85,13 @@ export function HeatmapView({
   > = {
     midnight: {
       label: "Midnight",
-      bg: "#0b0f14",
+      bg: "#081427",
       text: "#ffffff",
-      mutedText: "rgba(255,255,255,0.75)",
+      mutedText: "rgba(255,255,255,0.78)",
       accent: theme.palette.primary.main,
-      emptyCell: "rgba(255,255,255,0.12)",
+      emptyCell: "rgba(255,255,255,0.14)",
       overlayGradient:
-        "linear-gradient(180deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.42) 45%, rgba(0,0,0,0.68) 100%)",
+        "linear-gradient(180deg, rgba(3,10,22,0.62) 0%, rgba(3,10,22,0.40) 45%, rgba(3,10,22,0.70) 100%)",
       chipColor: "primary",
     },
     paper: {
