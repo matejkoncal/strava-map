@@ -172,7 +172,7 @@ function App() {
                   Open this page in your browser
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  It looks like you opened it inside an app
+                  You opened it inside an app
                   (Instagram, Facebook or Messenger).
                 </Typography>
                 <Typography variant="body2" gutterBottom>
