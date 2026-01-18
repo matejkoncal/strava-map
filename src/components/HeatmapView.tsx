@@ -331,7 +331,7 @@ export function HeatmapView({
       // Paper: use black-ish heatmap for better contrast on light background
       if (storyTheme === "paper") {
         const alpha =
-          count >= 4 ? 0.85 : count === 3 ? 0.65 : count === 2 ? 0.48 : 0.34;
+          count >= 4 ? 0.95 : count === 3 ? 0.82 : count === 2 ? 0.66 : 0.52;
         return `rgba(11, 15, 20, ${alpha})`;
       }
 
@@ -343,7 +343,7 @@ export function HeatmapView({
       const b = isHex ? parseInt(hex!.slice(5, 7), 16) : 255;
 
       const alpha =
-        count >= 4 ? 0.95 : count === 3 ? 0.8 : count === 2 ? 0.65 : 0.5;
+        count >= 4 ? 1 : count === 3 ? 0.9 : count === 2 ? 0.78 : 0.66;
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
@@ -427,24 +427,31 @@ export function HeatmapView({
     const isStory = viewMode === "story";
     const hasImageBg = isStory && Boolean(storyBackgroundImage);
 
-    const storyBorder = hasImageBg
-      ? "1px solid rgba(255,255,255,0.34)"
-      : storyTheme === "paper"
-        ? "1px solid rgba(11,15,20,0.28)"
-        : "1px solid rgba(255,255,255,0.22)";
+    const storyBorder = hasActivity
+      ? hasImageBg
+        ? "1px solid rgba(255,255,255,0.55)"
+        : storyTheme === "paper"
+          ? "1px solid rgba(11,15,20,0.45)"
+          : "1px solid rgba(255,255,255,0.35)"
+      : hasImageBg
+        ? "1px solid rgba(255,255,255,0.18)"
+        : storyTheme === "paper"
+          ? "1px solid rgba(11,15,20,0.14)"
+          : "1px solid rgba(255,255,255,0.12)";
 
-    const storyShadow = hasImageBg
-      ? "0 0 0 1px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.45)"
-      : storyTheme === "paper"
-        ? "0 0 0 1px rgba(255,255,255,0.55), 0 1px 3px rgba(0,0,0,0.18)"
-        : "0 0 0 1px rgba(0,0,0,0.35), 0 1px 3px rgba(0,0,0,0.28)";
+    const storyShadow = hasActivity
+      ? hasImageBg
+        ? "0 0 0 1px rgba(0,0,0,0.65), 0 3px 10px rgba(0,0,0,0.45)"
+        : storyTheme === "paper"
+          ? "0 0 0 1px rgba(255,255,255,0.65), 0 2px 6px rgba(0,0,0,0.18)"
+          : "0 0 0 1px rgba(0,0,0,0.40), 0 2px 7px rgba(0,0,0,0.30)"
+      : "none";
 
-    // Slightly lift empty cells on Story so the grid is always visible
     const storyEmpty = hasImageBg
-      ? "rgba(255,255,255,0.22)"
+      ? "rgba(255,255,255,0.10)"
       : storyTheme === "paper"
-        ? "rgba(11,15,20,0.14)"
-        : "rgba(255,255,255,0.16)";
+        ? "rgba(11,15,20,0.08)"
+        : "rgba(255,255,255,0.08)";
 
     return (
       <Tooltip key={dateStr} title={buildTooltipTitle(day, dayActivities)}>
@@ -469,7 +476,7 @@ export function HeatmapView({
               ? {
                   transform: hasActivity ? "scale(1.2)" : "none",
                   zIndex: 1,
-                  border: hasActivity ? "1px solid white" : "none",
+                  border: hasActivity ? "1px solid white" : undefined,
                 }
               : undefined,
           }}
