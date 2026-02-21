@@ -54,7 +54,7 @@ function App() {
     "heatmap"
   );
   const [filterType, setFilterType] = useState<string>("All");
-  const [dateRange, setDateRange] = useState<DateRange>("lastYear");
+  const [dateRange, setDateRange] = useState<DateRange>("year");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [inApp] = useState(() => isInAppBrowser());
   const [copyOpen, setCopyOpen] = useState(false);
